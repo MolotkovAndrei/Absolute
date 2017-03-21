@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context=".SetLimitedFunctionsActivity">
+
+    <item android:title="@string/menu_item_title_add_limited_function"
+        android:id="@+id/menu_item_add_limited_function"
+        android:icon="@drawable/ic_menu_add"
+          app:showAsAction="always|withText"/>
+</menu>

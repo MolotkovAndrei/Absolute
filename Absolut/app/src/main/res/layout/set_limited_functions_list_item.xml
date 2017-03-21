@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:paddingBottom="15dp"
+              android:orientation="vertical">
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        class="draw.ViewerSetLimitedFunctions"
+        android:id="@+id/list_item_limited_function_view"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nameFunction"
+        android:background="@color/colorBackgroundTextVievOnLimitation"
+        android:textSize="20dp"
+        android:text="result"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_limited_function_view"
+        android:src="@drawable/ic_refresh_btn"
+        android:drawablePadding="4dp"
+        android:id="@+id/refresh_button"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_limited_function_view"
+        android:layout_toRightOf="@id/refresh_button"
+        android:src="@drawable/ic_menu_remove"
+        android:drawablePadding="4dp"
+        android:id="@+id/delete_button"/>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/list_item_limited_function_view"
+        android:layout_toRightOf="@id/delete_button"
+        android:src="@drawable/ic_level_limitation"
+        android:drawablePadding="4dp"
+        android:id="@+id/set_level_button"/>
+</RelativeLayout>

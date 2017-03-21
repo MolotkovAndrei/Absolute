@@ -1,0 +1,121 @@
+<resources>
+    <string name="app_name">Абсолют</string>
+    <string name="funcName">x*sin(x)</string>
+    <string name="bestPoint">Best point:</string>
+    <string name="currentPoint">Current point:</string>
+    <string name="search">Поиск</string>
+    <string name="stopExecute">Остановить</string>
+    <string name="action_task">Задача</string>
+    <string name="action_algorithm">Метод</string>
+    <string name="numberIterations">Количество итераций</string>
+    <string name="accuracyTitle">Точность поиска</string>
+    <string name="algorithmParameters">Параметры алгоритма</string>
+    <string name="select">Выбрать</string>
+    <string name="cancel">Отмена</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="subTitleToolBarDisplayOptions">Темп показа</string>
+    <string name="subTitleToolBarRunSeries">Серия экспериментов</string>
+    <string name="subTitleToolBarStandardFunctions">Стандартный набор функций</string>
+    <string name="subTitleToolBarStandardAlgorithms">Стандартный набор алгоритмов</string>
+    <string name="subTitleToolBarSetLimitedFunctions">Задача с ограничениями</string>
+    <string name="subTitleToolBarSetLimitedLevel">Уровень ограничения </string>
+
+    <string name="createNewExperiment">Создать новый эксперимент</string>
+    <string name="closeExperiment">Закончить эксперимент</string>
+    <string name="titleDialogNameNewTab">Эксперимент</string>
+    <string name="titleDialogCloseTab">Выход</string>
+    <string name="messageDialogNameNewTab">Введите название эксперимента</string>
+    <string name="messageDialogCloseTab">Закончить эксперимент?</string>
+    <string name="nameNewTab">АГП</string>
+    <string name="titleMenuItemGraphics">Графика</string>
+    <string name="titleMenuItemResults">Результат</string>
+    <string name="close">Закрыть</string>
+
+    <string name="numberExperimentsTitle">Объем выборки</string>
+    <string name="averageNumberIterationsTitle">Среднее число итераций</string>
+    <string name="numberFunctionsTitle">Число функций</string>
+    <string name="averageDeviationTitle">Среднее отклонение</string>
+    <string name="reachMinTitle">Минимум найден</string>
+    <string name="notReachMinTitle">Минимум не найден</string>
+
+    <string name="sampleSize">Объем выборки</string>
+    <string name="ofFunctions">Функций</string>
+
+    <string-array name="algorithmItems">
+        <item>Стандартный набор</item>
+        <item>Новый метод</item>
+        <item>Параметры</item>
+    </string-array>
+
+    <string name="executeTask">Выполнить задачу</string>
+    <string name="continueTask">Продолжить</string>
+    <string name="displayTempo">Темп показа</string>
+    <string name="executeSerial">Выполнить серию</string>
+    <string name="displaySpeedQuick">0   сек. - быстрый темп</string>
+    <string name="displaySpeedNormal">0.1 сек. - нормальный темп</string>
+    <string name="displaySpeedSlow">0.2 сек. - медленный темп</string>
+    <string name="valueDelay">Величина задержки</string>
+    <string name="executeOneStep">Выполнить по шагам</string>
+    <string name="executeNumberStep">Остановить после</string>
+    <string name="ofSteps">шагов</string>
+    <string name="nextStep">Пуск</string>
+    <string name="executeWithoutStop">Без останова</string>
+    <string name="subItemTitleStandardFunctions">Стандартный набор</string>
+    <string name="subItemTitleSetFormula">Формульное задание</string>
+    <string name="subItemTitleRandomFunctions">Случайный датчик</string>
+    <string name="subItemTitleCopyInAllWindows">Копировать во все окна</string>
+    <string name="subItemTitleStandardAlgorithm">Стандартный метод</string>
+    <string name="subItemTitleNewAlgorithm">Новый метод</string>
+    <string name="subItemTitleSettings">Параметры</string>
+    <string name="subItemTitleSensors">Датчики</string>
+    <string name="subItemTitleTotalResults">Общие результаты</string>
+    <string name="subItemTitleOperationalCharacteristics">Операционные характеристики</string>
+    <string name="subItemTitleExperimentsJournal">Журнал экспериментов</string>
+    <string name="subItemTitleShowTotalResults">Показать</string>
+    <string name="subItemTitleClearTotalResults">Очистить</string>
+    <string name="titleSettingsNumberIterations">Количество итераций:</string>
+    <string name="titleSettingsAccuracy">Точность поиска:</string>
+    <string name="titleSettingParameterPolygonal">Константа Липшица:</string>
+    <string name="titleSettingParameterKoushner">Параметр метода:</string>
+    <string name="titleSettingParameterOtherMethods">Коэффициент надежности:</string>
+    <string name="titleSettingStepTurnOnMixLocallyAdaptive">Шаг включения адаптации:</string>
+    <string name="titleSettingStepTurnOnMix">Шаг включения смеси:</string>
+    <string name="titleSettingDegreeLocally">Степень локальности:</string>
+    <string name="titleSettingPortionGlobalIterations">Доля глобальных итераций:</string>
+    <string name="maxNumberHansenFunctions">Число функций не больше 20</string>
+    <string name="subtitleOperationalCharacteristicsActivity">Операционные характеристики</string>
+    <string name="titleRadioButtonUnlimitedTask">Задача без ограничений</string>
+    <string name="titleRadioButtonLimitedTask">Задача с ограничениями</string>
+    <string name="menu_item_title_add_limited_function">Добавить ограничение</string>
+    <string name="menu_item_title_delete_limited_function">Удалить ограничение</string>
+    <string name="subItemTitleSetUnlimitedTask">установить задачу</string>
+
+    <string-array name="standardAlgorithmsItems">
+        <item>Полный перебор</item>
+        <item>Метод ломанных</item>
+        <item>Метод Кушнера</item>
+        <item>Алгоритм глобального поиска</item>
+        <item>Локально-адаптивный метод</item>
+        <item>Смешанный глобальный поиск</item>
+        <item>Поиск с локальной настройкой</item>
+    </string-array>
+
+    <string-array name="menuItemResult">
+        <item>Итоги</item>
+        <item>Операционные характеристики</item>
+        <item>Журнал экспериментов</item>
+    </string-array>
+
+    <string-array name="menuItemTotalResult">
+        <item>Показать</item>
+        <item>Очистить</item>
+    </string-array>
+
+    <string-array name="seriesActivityItems">
+        <item>Функции Шеккеля и Хилла - Гибсона</item>
+        <item>Функции Хилла - Гибсона</item>
+        <item>Функции Шеккеля</item>
+        <item>Функции Хансена</item>
+    </string-array>
+</resources>

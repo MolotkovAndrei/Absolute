@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context = ".MainActivity">
+    <item android:id="@+id/menu_item_remove_task"
+          android:icon="@drawable/ic_menu_remove"
+          android:title="@string/closeExperiment"
+          app:showAsAction="always|withText"/>
+
+    <item android:id="@+id/menu_item_new_task"
+          android:icon="@drawable/ic_menu_add"
+          android:title="@string/createNewExperiment"
+          app:showAsAction="always|withText"/>
+
+    <item
+        android:id="@+id/menu_item_search"
+        android:orderInCategory="100"
+        android:title="@string/search"
+        app:showAsAction="never">
+        <menu>
+            <item android:id="@+id/sub_item_execute_task"
+                android:title="@string/executeTask">
+            </item>
+            <item android:id="@+id/sub_item_continue_task"
+                android:title="@string/continueTask"
+                android:visible="false">
+            </item>
+            <item android:id="@+id/sub_item_display_tempo"
+                android:title="@string/displayTempo">
+            </item>
+            <item android:id="@+id/sub_item_execute_serial"
+                android:title="@string/executeSerial">
+            </item>
+        </menu>
+    </item>
+    <group android:id="@+id/g1">
+        <item
+            android:id="@+id/menu_item_task"
+            android:orderInCategory="100"
+            android:title="@string/action_task"
+            app:showAsAction="never">
+            <menu >
+                <group android:id="@+id/group_unlimited_task">
+                    <item android:title="@string/subItemTitleStandardFunctions"
+                          android:id="@+id/sub_item_standard_functions" />
+                    <item android:title="@string/subItemTitleSetFormula"
+                          android:id="@+id/sub_item_set_formula" />
+                    <item android:title="@string/subItemTitleRandomFunctions"
+                          android:id="@+id/sub_item_random_functions" />
+                    <item android:title="@string/subItemTitleCopyInAllWindows"
+                          android:id="@+id/sub_item_copy_in_all_windows" />
+                </group>
+
+            </menu>
+        </item>
+    </group>
+    <group android:id="@+id/group_limited_task">
+        <item android:title="@string/subItemTitleSetUnlimitedTask"
+              android:id="@+id/sub_item_set_unlimited_task"/>
+    </group>
+
+    <item
+        android:id="@+id/menu_item_algorithm"
+        android:orderInCategory="100"
+        android:title="@string/action_algorithm"
+        app:showAsAction="never">
+        <menu >
+            <item android:title="@string/subItemTitleStandardAlgorithm"
+                android:id="@+id/sub_item_standard_algorithms" />
+            <item android:title="Индексный метод"
+                  android:id="@+id/indexAlgorithm"/>
+            <item android:title="Метод штрафных функций"
+                  android:id="@+id/penaltyAlgorithm"/>
+            <item android:title="@string/subItemTitleNewAlgorithm"
+                android:id="@+id/sub_item_new_algorithm" />
+            <item android:title="@string/subItemTitleSettings"
+                android:id="@+id/sub_item_settings" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_item_graphics"
+        android:orderInCategory="100"
+        android:title="@string/titleMenuItemGraphics"
+        app:showAsAction="never">
+        <menu >
+            <item android:title="@string/subItemTitleSensors"
+                android:id="@+id/sub_item_sensors" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_item_results"
+        android:orderInCategory="100"
+        android:title="@string/titleMenuItemResults"
+        app:showAsAction="never">
+        <menu >
+            <item android:title="@string/subItemTitleTotalResults"
+                android:id="@+id/sub_item_total_results" ></item>
+            <item android:title="@string/subItemTitleOperationalCharacteristics"
+                android:id="@+id/sub_item_operational_characteristics" />
+            <item android:title="@string/subItemTitleExperimentsJournal"
+                android:id="@+id/sub_item_experiments_journal" />
+        </menu>
+    </item>
+</menu>

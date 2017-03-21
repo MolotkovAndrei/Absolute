@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.example.absolute">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".StandardFunctionsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".StandardAlgorithmActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".SettingsAlgorithmActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".WorkSpaceActivity"/>
+        <activity
+            android:name=".SetterSensors"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity android:name=".TotalResultViewerActivity"/>
+        <activity android:name=".ExperimentsJournalActivity"/>
+        <activity android:name=".OperationalCharacteristicsActivity"/>
+        <activity android:name=".SearchActivity"/>
+        <activity android:name=".RunSeriesActivity"/>
+        <activity android:name=".DisplayOptionsActivity"/>
+        <activity android:name=".SetLimitedFunctionsActivity">
+        </activity>
+        <activity android:name=".SetLimitedLevelActivity">
+        </activity>
+    </application>
+
+</manifest>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="@string/nextStep"
+          android:id="@+id/itemNextStep"
+          android:icon="@drawable/ic_menu_next_step"
+          app:showAsAction="always|withText"/>
+    <item android:title="@string/executeWithoutStop"
+          android:id="@+id/itemExecuteWithoutStop"
+          android:icon="@drawable/ic_menu_execute_without_stop"
+          app:showAsAction="always|withText"/>
+    <item android:title="@string/close"
+          android:icon="@drawable/ic_menu_close"
+          app:showAsAction="always|withText"
+          android:id="@+id/itemCloseMenu" />
+</menu>
