@@ -9,19 +9,21 @@ import android.graphics.Rect;
 import java.util.ArrayList;
 import java.util.List;
 
+import function.IFunction;
 import function.PenaltyFunction;
 import storage.Dot;
 import task.ITask;
+import task.PenaltyTask;
 
 public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
     private List<DrawerSensor> drawerPlotsLimitedFunctions;
     private DrawerSensor drawerPlotMinimizedFunction;
     private DrawerSensor drawerDistributionPoints;
-    private DrawerSensor drawerDistributionValues;
+    private List<DrawerSensor> drawersDistributionValues;
     private DrawerSensor drawerDensityPoints;
-    private DrawerSensor drawerDensityValues;
+    private List<DrawerSensor> drawersDensityValues;
     private DrawerSensor drawerDynamicsPoints;
-    private DrawerSensor drawerDynamicsValues;
+    private List<DrawerSensor> drawersDynamicsValues;
     private DrawerSensor drawerInformationPanel;
     //private int[] indexesForDraw;
 
@@ -32,25 +34,40 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
     public CalculatorSensorsPenaltyTask(final ITask task) {
         super(task);
 
+        /*ArrayList<Dot> dotsStorage;
+
+        if (task instanceof PenaltyTask) {
+            dotsStorage = (ArrayList<Dot>) ((PenaltyTask) task).getTestPointsForFunctions().get(0);
+        }*/
+
         int countLimitedFunctions = task.getLimitationFunctions().size();
         //indexesForDraw = new int[countLimitedFunctions + 2];
         dots = task.getStorage();
         drawerPlotsLimitedFunctions = new ArrayList<>();
+        drawersDistributionValues = new ArrayList<>();
+        drawersDynamicsValues = new ArrayList<>();
+        drawersDensityValues = new ArrayList<>();
 
 
         drawerPlotMinimizedFunction = new DrawerPlot(task.getMinimizedFunction(), new Rect());
+        drawersDistributionValues.add(new CalculatorDistributionValues(task, new Rect()));
+        drawersDynamicsValues.add(new CalculatorDynamicsValues(task, new Rect()));
+        drawersDensityValues.add(new CalculatorDensityValues(task, new Rect()));
         for (int i = 0; i < countLimitedFunctions; i++) {
-            drawerPlotsLimitedFunctions.add(new DrawerPlot(task.getLimitationFunctions().get(i), new Rect()));
+            IFunction function = task.getLimitationFunctions().get(i);
+            drawerPlotsLimitedFunctions.add(new DrawerPlot(function, new Rect()));
+            drawersDistributionValues.add(new CalculatorDistributionValues(function, dots, new Rect()));
+            drawersDynamicsValues.add(new CalculatorDynamicsValues(function, dots, new Rect()));
+            drawersDensityValues.add(new CalculatorDensityValues(function, dots, new Rect()));
         }
         penaltyFunction = new PenaltyFunction(task.getMinimizedFunction(), task.getLimitationFunctions());
         drawerPlotsLimitedFunctions.add(new DrawerPlot(penaltyFunction, new Rect()));
-
         drawerDistributionPoints = new CalculatorDistributionPoints(task, new Rect());
-        drawerDistributionValues = new CalculatorDistributionValues(penaltyFunction, dots, new Rect());
         drawerDensityPoints = new CalculatorDensityPoints(task, new Rect());
-        drawerDensityValues = new CalculatorDensityValues(task, new Rect());
         drawerDynamicsPoints = new CalculatorDynamicsPoints(task, new Rect());
-        drawerDynamicsValues = new CalculatorDynamicsValues(task, new Rect());
+        drawersDistributionValues.add(new CalculatorDistributionValues(penaltyFunction, dots, new Rect()));
+        drawersDynamicsValues.add(new CalculatorDynamicsValues(penaltyFunction, dots, new Rect()));
+        drawersDensityValues.add(new CalculatorDensityValues(penaltyFunction, dots, new Rect()));
         drawerInformationPanel = new DrawerInformationPanelUnlimited(task, new Rect());
     }
 
@@ -67,63 +84,63 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
         if (isDistributionValues) {
             rightBottom.x = rightBottomPointPanelForPlot.x + WIDTH_DISTRIBUTION_VALUES_PANEL;
 
-            drawerDistributionValues.getDrawPanel().set(leftTop.x, leftTop.y,
+            drawersDistributionValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                     rightBottom.x, rightBottom.y);
-            drawerDistributionValues.calculatePointsForDraw();
+            drawersDistributionValues.get(numberPanel).calculatePointsForDraw();
 
             if (isDynamicsValues && isDensityValues) {
-                Rect panelForDistributionValues = drawerDistributionValues.getDrawPanel();
+                Rect panelForDistributionValues = drawersDistributionValues.get(numberPanel).getDrawPanel();
                 leftTop.x = panelForDistributionValues.right;
                 rightBottom.x = panelForDistributionValues.right +
                         (widthWorkSpace - panelForDistributionValues.right) / 2;
-                drawerDynamicsValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                drawersDynamicsValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                         rightBottom.x, rightBottom.y);
-                drawerDynamicsValues.calculatePointsForDraw();
+                drawersDynamicsValues.get(numberPanel).calculatePointsForDraw();
 
-                Rect panelForDynamicsValues = drawerDynamicsValues.getDrawPanel();
+                Rect panelForDynamicsValues = drawersDynamicsValues.get(numberPanel).getDrawPanel();
                 leftTop.x = panelForDynamicsValues.right;
                 rightBottom.x = widthWorkSpace;
-                drawerDensityValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                drawersDensityValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                         rightBottom.x, rightBottom.y);
-                drawerDensityValues.calculatePointsForDraw();
+                drawersDensityValues.get(numberPanel).calculatePointsForDraw();
             } else {
-                Rect panelForDistributionValues = drawerDistributionValues.getDrawPanel();
+                Rect panelForDistributionValues = drawersDistributionValues.get(numberPanel).getDrawPanel();
                 leftTop.x = panelForDistributionValues.right;
                 rightBottom.x = widthWorkSpace;
                 if (isDynamicsValues) {
-                    drawerDynamicsValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                    drawersDynamicsValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                             rightBottom.x, rightBottom.y);
-                    drawerDynamicsValues.calculatePointsForDraw();
+                    drawersDynamicsValues.get(numberPanel).calculatePointsForDraw();
                 } else {
-                    drawerDensityValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                    drawersDensityValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                             rightBottom.x, rightBottom.y);
-                    drawerDensityValues.calculatePointsForDraw();
+                    drawersDensityValues.get(numberPanel).calculatePointsForDraw();
                 }
             }
         } else {
             if (isDynamicsValues && isDensityValues) {
                 rightBottom.x = rightBottomPointPanelForPlot.x +
                         (widthWorkSpace - rightBottomPointPanelForPlot.x) / 2;
-                drawerDynamicsValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                drawersDynamicsValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                         rightBottom.x, rightBottom.y);
-                drawerDynamicsValues.calculatePointsForDraw();
+                drawersDynamicsValues.get(numberPanel).calculatePointsForDraw();
 
-                Rect panelForDynamicsValues = drawerDynamicsValues.getDrawPanel();
+                Rect panelForDynamicsValues = drawersDynamicsValues.get(numberPanel).getDrawPanel();
                 leftTop.x = panelForDynamicsValues.right;
                 rightBottom.x = widthWorkSpace;
-                drawerDensityValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                drawersDensityValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                         rightBottom.x, rightBottom.y);
-                drawerDensityValues.calculatePointsForDraw();
+                drawersDensityValues.get(numberPanel).calculatePointsForDraw();
             } else {
                 rightBottom.x = widthWorkSpace;
                 if (isDynamicsValues) {
-                    drawerDynamicsValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                    drawersDynamicsValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                             rightBottom.x, rightBottom.y);
-                    drawerDynamicsValues.calculatePointsForDraw();
+                    drawersDynamicsValues.get(numberPanel).calculatePointsForDraw();
                 } else {
-                    drawerDensityValues.getDrawPanel().set(leftTop.x, leftTop.y,
+                    drawersDensityValues.get(numberPanel).getDrawPanel().set(leftTop.x, leftTop.y,
                             rightBottom.x, rightBottom.y);
-                    drawerDensityValues.calculatePointsForDraw();
+                    drawersDensityValues.get(numberPanel).calculatePointsForDraw();
                 }
             }
         }
@@ -203,14 +220,14 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
         rightBottom = new Point(widthPanelForPlot, heightPanelForPlot);
         drawerPlotMinimizedFunction.getDrawPanel().set(leftTop.x, leftTop.y, rightBottom.x, rightBottom.y);
         drawerPlotMinimizedFunction.calculatePointsForDraw();
-
+        createPanelsForValues(leftTop, rightBottom, 0);
         for (int i = 0; i < drawerPlotsLimitedFunctions.size(); i++) {
             drawerPlotsLimitedFunctions.get(i).getDrawPanel().set(leftTop.x, leftTop.y + ((i + 1) * heightPanelForPlot),
                     rightBottom.x, rightBottom.y + ((i + 1) * heightPanelForPlot));
             drawerPlotsLimitedFunctions.get(i).calculatePointsForDraw();
 
-           if (i + 1 == drawerPlotsLimitedFunctions.size()) {
-               createPanelsForValues(leftTop, rightBottom, drawerPlotsLimitedFunctions.size());
+           if (i + 1 <= drawerPlotsLimitedFunctions.size()) {
+               createPanelsForValues(leftTop, rightBottom, i + 1);
            }
         }
         //mHiderInvalidPoints.calculateHideRectangles();
@@ -237,35 +254,51 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
         }
         penaltyFunction = new PenaltyFunction(task.getMinimizedFunction(), task.getLimitationFunctions());
         drawerPlotsLimitedFunctions.get(countLimitedFunctions).setContent(penaltyFunction);
-        //drawerPlotsLimitedFunctions.get(countLimitedFunctions).setContent(task.getMinimizedFunction());
-        //mHiderInvalidPoints.updateFunctions(task.getLimitationFunctions());
 
-        /*List<List<Dot>> indexDots = new ArrayList<>();
-        for (int i = 0; i < countLimitedFunctions + 2; i++) {
-            indexDots.add(new ArrayList<Dot>());
-        }*/
         dots = task.getStorage();
-        /*for (int i = 0; i < dots.size(); i++) {
-            indexDots.get(dots.get(i).index).add(dots.get(i));
-        }*/
+        System.out.println("size dots: " + dots.size());
+        ArrayList<Dot> testDotsFunctions = new ArrayList<>();
+        if (task instanceof PenaltyTask) {
+            IFunction function;
+            for (int i = 0; i <= countLimitedFunctions; i++) {
+                if (i == 0) {
+                    function = task.getMinimizedFunction();
+                } else {
+                    function = task.getLimitationFunctions().get(i - 1);
+                }
+                testDotsFunctions = (ArrayList) ((PenaltyTask) task).getTestPointsForFunctions().get(i);
+                System.out.println("size testDotsFunctions: " + testDotsFunctions.size());
+                if (isDistributionValues) {
+                    drawersDistributionValues.get(i).setContent(function, testDotsFunctions);
+                }
+                if (isDensityValues) {
+                    drawersDensityValues.get(i).setContent(function, testDotsFunctions);
+                }
+                if (isDynamicsValues) {
+                    drawersDynamicsValues.get(i).setContent(function, testDotsFunctions);
+                }
+            }
+        }
+
+
 
         if (isDistributionPoints) {
             drawerDistributionPoints.setContent(penaltyFunction, dots);
         }
         if (isDistributionValues) {
-            drawerDistributionValues.setContent(penaltyFunction, dots);
+            drawersDistributionValues.get(countLimitedFunctions + 1).setContent(penaltyFunction, dots);
         }
         if (isDensityPoints) {
             drawerDensityPoints.setContent(penaltyFunction, dots);
         }
         if (isDensityValues) {
-            drawerDensityValues.setContent(penaltyFunction, dots);
+            drawersDensityValues.get(countLimitedFunctions + 1).setContent(penaltyFunction, dots);
         }
         if (isDynamicsPoints) {
             drawerDynamicsPoints.setContent(penaltyFunction, dots);
         }
         if (isDynamicsValues) {
-            drawerDynamicsValues.setContent(penaltyFunction, dots);
+            drawersDynamicsValues.get(countLimitedFunctions + 1).setContent(penaltyFunction, dots);
         }
         //mDrawerDistributionPoints.get(0).setContent(task.getMinimizedFunction(), indexDots.get(countLimitedFunctions + 1));
         /*drawerDistributionValues.get(0).setContent(task.getMinimizedFunction(), indexDots.get(countLimitedFunctions + 1));
@@ -296,19 +329,25 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
             drawerDistributionPoints.draw(canvas, index);
         }
         if (isDistributionValues) {
-            drawerDistributionValues.draw(canvas, index);
+            for (DrawerSensor drawer : drawersDistributionValues) {
+                drawer.draw(canvas, index);
+            }
         }
         if (isDensityPoints) {
             drawerDensityPoints.draw(canvas, index);
         }
         if (isDensityValues) {
-            drawerDensityValues.draw(canvas, index);
+            for (DrawerSensor drawer : drawersDensityValues) {
+                drawer.draw(canvas, index);
+            }
         }
         if (isDynamicsPoints) {
             drawerDynamicsPoints.draw(canvas, index);
         }
         if (isDynamicsValues) {
-            drawerDynamicsValues.draw(canvas, index);
+            for (DrawerSensor drawer : drawersDynamicsValues) {
+                drawer.draw(canvas, index);
+            }
         }
         //mDrawerDistributionPoints.get(0).draw(canvas, index);
         //mDrawerDistributionPoints.get(0).draw(canvas, indexesForDraw[indexesForDraw.length - 1]);

@@ -53,10 +53,10 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
         for (int i = 0; i < countLimitedFunctions; i++) {
             IFunction function = task.getLimitationFunctions().get(i);
             drawerPlotsLimitedFunctions.add(new DrawerPlot(function, new Rect()));
-            mDrawerDistributionPoints.add(new CalculatorDistributionPoints(function, task.getStorage(), new Rect()));
-            drawerDistributionValues.add(new CalculatorDistributionValues(function, task.getStorage(), new Rect()));
-            drawerDynamicsValues.add(new CalculatorDynamicsValues(function, task.getStorage(), new Rect()));
-            drawerDensityValues.add(new CalculatorDensityValues(function, task.getStorage(), new Rect()));
+            mDrawerDistributionPoints.add(new CalculatorDistributionPoints(function, dots, new Rect()));
+            drawerDistributionValues.add(new CalculatorDistributionValues(function, dots, new Rect()));
+            drawerDynamicsValues.add(new CalculatorDynamicsValues(function, dots, new Rect()));
+            drawerDensityValues.add(new CalculatorDensityValues(function, dots, new Rect()));
         }
         Rect drawPanelHiderInvalidPoints = new Rect();
         drawerPlotsLimitedFunctions.add(new DrawerPlot(task.getMinimizedFunction(), drawPanelHiderInvalidPoints));
