@@ -34,14 +34,13 @@
             </item>
         </menu>
     </item>
-    <group android:id="@+id/g1">
+    <group android:id="@+id/group_unlimited_task">
         <item
             android:id="@+id/menu_item_task"
             android:orderInCategory="100"
             android:title="@string/action_task"
             app:showAsAction="never">
             <menu >
-                <group android:id="@+id/group_unlimited_task">
                     <item android:title="@string/subItemTitleStandardFunctions"
                           android:id="@+id/sub_item_standard_functions" />
                     <item android:title="@string/subItemTitleSetFormula"
@@ -50,34 +49,52 @@
                           android:id="@+id/sub_item_random_functions" />
                     <item android:title="@string/subItemTitleCopyInAllWindows"
                           android:id="@+id/sub_item_copy_in_all_windows" />
-                </group>
-
             </menu>
         </item>
     </group>
     <group android:id="@+id/group_limited_task">
-        <item android:title="@string/subItemTitleSetUnlimitedTask"
-              android:id="@+id/sub_item_set_unlimited_task"/>
+        <item android:title="@string/action_task"
+              android:id="@+id/item_set_limited_task"
+              android:orderInCategory="100"
+              app:showAsAction="never"/>
     </group>
 
-    <item
-        android:id="@+id/menu_item_algorithm"
-        android:orderInCategory="100"
-        android:title="@string/action_algorithm"
-        app:showAsAction="never">
-        <menu >
-            <item android:title="@string/subItemTitleStandardAlgorithm"
-                android:id="@+id/sub_item_standard_algorithms" />
-            <item android:title="Индексный метод"
-                  android:id="@+id/indexAlgorithm"/>
-            <item android:title="Метод штрафных функций"
-                  android:id="@+id/penaltyAlgorithm"/>
-            <item android:title="@string/subItemTitleNewAlgorithm"
-                android:id="@+id/sub_item_new_algorithm" />
-            <item android:title="@string/subItemTitleSettings"
-                android:id="@+id/sub_item_settings" />
-        </menu>
-    </item>
+
+    <group android:id="@+id/group_unlimited_algorithms">
+        <item
+            android:id="@+id/menu_item_unlimited_algorithm"
+            android:orderInCategory="100"
+            android:title="@string/action_algorithm"
+            app:showAsAction="never">
+            <menu >
+                <item android:title="@string/subItemTitleStandardAlgorithm"
+                      android:id="@+id/sub_item_standard_algorithms" />
+                <item android:title="@string/subItemTitleNewAlgorithm"
+                      android:id="@+id/sub_item_new_algorithm" />
+                <item android:title="@string/subItemTitleSettings"
+                      android:id="@+id/sub_item_settings" />
+            </menu>
+        </item>
+    </group>
+
+    <group android:id="@+id/group_limited_algorithms">
+        <item
+            android:id="@+id/menu_item_limited_algorithm"
+            android:orderInCategory="100"
+            android:title="@string/action_algorithm"
+            app:showAsAction="never">
+            <menu >
+
+                <item android:title="Индексный метод"
+                      android:id="@+id/indexAlgorithm"/>
+                <item android:title="Метод штрафных функций"
+                      android:id="@+id/penaltyAlgorithm"/>
+                <item android:title="@string/subItemTitleSettings"
+                      android:id="@id/sub_item_settings" />
+            </menu>
+        </item>
+    </group>
+
     <item
         android:id="@+id/menu_item_graphics"
         android:orderInCategory="100"

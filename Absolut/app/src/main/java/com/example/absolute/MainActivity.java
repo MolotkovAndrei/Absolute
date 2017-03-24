@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
             return super.onPrepareOptionsMenu(menu);
         }
 
+        currentTab = tabHost.getCurrentTab();
         MenuItem item;
         if (model.getDisplayOptions().isDrawingFinish()) {
             menu.clear();
@@ -146,14 +147,24 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
             item = menu.findItem(R.id.menu_item_remove_task);
             item.setVisible(true);
         }
-        if (model.getStorageTask(currentTab).getCurrentTask() instanceof TaskWithLimitations) {
-            menu.setGroupVisible(R.id.g1, false);
-            menu.setGroupVisible(R.id.group_limited_task, true);
-        } else {
-            menu.setGroupVisible(R.id.g1, true);
-            menu.setGroupVisible(R.id.group_limited_task, false);
-        }
+        setVisibleItemMenu(menu);
         return super.onPrepareOptionsMenu(menu);
+    }
+
+    private void setVisibleItemMenu(Menu menu) {
+        if (model.getStorageTask(currentTab).getCurrentTask() instanceof TaskWithLimitations) {
+            menu.setGroupVisible(R.id.group_unlimited_task, false);
+            menu.setGroupVisible(R.id.group_limited_task, true);
+
+            menu.setGroupVisible(R.id.group_unlimited_algorithms, false);
+            menu.setGroupVisible(R.id.group_limited_algorithms, true);
+        } else {
+            menu.setGroupVisible(R.id.group_unlimited_task, true);
+            menu.setGroupVisible(R.id.group_limited_task, false);
+
+            menu.setGroupVisible(R.id.group_unlimited_algorithms, true);
+            menu.setGroupVisible(R.id.group_limited_algorithms, false);
+        }
     }
 
     @Override
@@ -249,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
                 storageTasks = new StorageTasks(newTask1);
                 model.setStorageTask(currentTab, storageTasks);
                 break;
-            case R.id.sub_item_set_unlimited_task:
+            case R.id.item_set_limited_task:
                 intent = SetLimitedFunctionsActivity.newIntent(MainActivity.this, storageTasks);
                 startActivityForResult(intent, REQUEST_CODE_SET_LIMITED_FUNCTIONS);
                 break;
@@ -458,11 +469,15 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
             item.setVisible(false);
             item = menu.findItem(R.id.menu_item_task);
             item.setVisible(false);
-            item = menu.findItem(R.id.menu_item_algorithm);
+            item = menu.findItem(R.id.menu_item_unlimited_algorithm);
             item.setVisible(false);
             item = menu.findItem(R.id.menu_item_graphics);
             item.setVisible(false);
             item = menu.findItem(R.id.menu_item_results);
+            item.setVisible(false);
+            item = menu.findItem(R.id.item_set_limited_task);
+            item.setVisible(false);
+            item = menu.findItem(R.id.menu_item_limited_algorithm);
             item.setVisible(false);
             return true;
         }

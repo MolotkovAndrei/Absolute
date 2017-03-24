@@ -1,5 +1,6 @@
 package algorithm.withLimitation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,8 @@ import storage.TestDots;
 public abstract class AlgorithmWithLimitations implements IAlgorithm {
     protected IStorage testDots;
     protected Settings settings;
-    protected String name;
+    protected double parameter;
+    protected String name = "IndexingAlgorithm";
     private int currentIteration = 0;
     protected int numberIntervalWithMaxCharacteristic;
     private int M = 0;
@@ -23,10 +25,16 @@ public abstract class AlgorithmWithLimitations implements IAlgorithm {
     public AlgorithmWithLimitations(final Settings settings, final int numberFunctions) {
         testDots = new TestDots();
         this.settings = settings;
+        parameter = this.settings.getParameter();
         mAttributesOfSetOfPointsList = new ArrayList<>();
         for (int i = 0; i <= numberFunctions; i++) {
             mAttributesOfSetOfPointsList.add(new AttributesOfSetOfPoints());
         }
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
     @Override
@@ -77,6 +85,8 @@ public abstract class AlgorithmWithLimitations implements IAlgorithm {
     @Override
     public void setSettings(final Settings settings) {
         this.settings = settings;
+        parameter = this.settings.getParameter();
+        reset();
     }
 
     @Override
@@ -105,7 +115,7 @@ public abstract class AlgorithmWithLimitations implements IAlgorithm {
         return result;
     }
 
-    protected class AttributesOfSetOfPoints {
+    protected class AttributesOfSetOfPoints implements Serializable {
         private List<Integer> numbersOfPoints;
         private double mu;
         private double z;

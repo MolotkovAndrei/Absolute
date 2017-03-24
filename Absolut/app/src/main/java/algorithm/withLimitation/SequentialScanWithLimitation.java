@@ -5,13 +5,12 @@ import storage.Dot;
 
 public class SequentialScanWithLimitation extends AlgorithmWithLimitations {
     private Dot leftDot, rightDot;
-    private double parameter;
     private double mu, z;
     private double delta;
 
     public SequentialScanWithLimitation(final Settings settings, final int numberFunctions) {
         super(settings, numberFunctions);
-        parameter = settings.getParameter();
+        //parameter = settings.getParameter();
     }
 
     @Override

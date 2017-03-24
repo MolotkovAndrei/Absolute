@@ -27,7 +27,8 @@ public class SettingsAlgorithmActivity extends AppCompatActivity {
     private enum AlgorithmType {
         BAGS, BAGS_INSIDE_INTERVAL, BAGS_WITH_LOCAL_SETTING,
         KOUSHNER, BAGS_LOCALLY_ADAPTIVE, BAGS_MIX,
-        BAGS_MONOTONIC, POLYGONAL_METHOD, RANDOM_SEARCH, SEQUENTAL_SCAN
+        BAGS_MONOTONIC, POLYGONAL_METHOD, RANDOM_SEARCH, SEQUENTAL_SCAN,
+        INDEXING
     }
 
     private abstract class ItemSetting {
@@ -167,6 +168,7 @@ public class SettingsAlgorithmActivity extends AppCompatActivity {
                 case BAGS_MIX:
                 case BAGS_MONOTONIC:
                 case BAGS_WITH_LOCAL_SETTING:
+                case INDEXING:
                     createParameterForOtherMethods();
                     break;
             }
@@ -213,6 +215,7 @@ public class SettingsAlgorithmActivity extends AppCompatActivity {
                         case BAGS_MIX:
                         case BAGS_MONOTONIC:
                         case BAGS_WITH_LOCAL_SETTING:
+                        case INDEXING:
                             parameter = (double)(progress + 1) / 10 + 1;
                             valueTV.setText(String.valueOf(parameter));
                             break;
@@ -418,6 +421,7 @@ public class SettingsAlgorithmActivity extends AppCompatActivity {
             case BAGS:
             case BAGS_MONOTONIC:
             case BAGS_WITH_LOCAL_SETTING:
+            case INDEXING:
                 settingParameter.createSetting();
                 break;
             case BAGS_LOCALLY_ADAPTIVE:
@@ -494,6 +498,9 @@ public class SettingsAlgorithmActivity extends AppCompatActivity {
                 break;
             case "LocallyAdaptive_BAGS":
                 algorithmType = AlgorithmType.BAGS_LOCALLY_ADAPTIVE;
+                break;
+            case "IndexingAlgorithm":
+                algorithmType = AlgorithmType.INDEXING;
                 break;
         }
     }
