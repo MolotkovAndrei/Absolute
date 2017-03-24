@@ -36,9 +36,9 @@ public class CalculatorDynamicsPoints extends DrawerSensor {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(2);
 
-        for (int i = 0; i < index; i++) {
-            canvas.drawLine(drawPoints.get(i).x, drawPoints.get(i).y,
-                    drawPoints.get(i + 1).x, drawPoints.get(i + 1).y, paint);
+        for (int i = 1; i <= index; i++) {
+            canvas.drawLine(drawPoints.get(i - 1).x, drawPoints.get(i -1).y,
+                    drawPoints.get(i).x, drawPoints.get(i).y, paint);
         }
 
         paint.setColor(Color.BLACK);

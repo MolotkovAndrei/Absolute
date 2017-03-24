@@ -14,7 +14,7 @@ public interface IModel extends Serializable {
     void setDisplayOptions(final DisplayOptions displayOptions);
     DisplayOptions getDisplayOptions();
     void stopDrawing();
-    void continueDrawing(boolean withStop);
+    void continueDrawing(boolean withStop, int n);
     void notifyObservers();
     void setStorageTask(final int numberStorage, final StorageTasks storageTasks);
     StorageTasks getStorageTask(final int numberStorage);

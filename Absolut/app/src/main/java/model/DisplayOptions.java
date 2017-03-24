@@ -1,8 +1,13 @@
 package model;
 
+import android.content.Context;
+
+import com.example.absolute.DisplayOptionsListener;
+
 import java.io.Serializable;
 
 public class DisplayOptions implements Serializable {
+    private DisplayOptionsListener listener;
     private DisplaySpeed displaySpeed = DisplaySpeed.NORMAL;
     private int numberStepsBeforeStop = 10;
     private boolean withStop = false;
@@ -10,6 +15,14 @@ public class DisplayOptions implements Serializable {
     private boolean isDrawing = false;
     private boolean isDrawingFinish = true;
     private float scaleFactor = 1.0f;
+
+    public DisplayOptions(Context context) {
+        try {
+            listener = (DisplayOptionsListener)context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + "must implements DisplayOptionsListener");
+        }
+    }
 
     public enum DisplaySpeed {
         QUICK(0L),
@@ -74,6 +87,9 @@ public class DisplayOptions implements Serializable {
 
     public void setDrawing(final boolean drawing) {
         isDrawing = drawing;
+        if (listener != null) {
+            listener.updateMenuItems();
+        }
     }
 
     public boolean isDrawingFinish() {
@@ -82,5 +98,12 @@ public class DisplayOptions implements Serializable {
 
     public void setDrawingFinish(final boolean drawingFinish) {
         isDrawingFinish = drawingFinish;
+        if (listener != null) {
+            listener.updateMenuItems();
+        }
+    }
+
+    public void setListener(DisplayOptionsListener listener) {
+        this.listener = listener;
     }
 }

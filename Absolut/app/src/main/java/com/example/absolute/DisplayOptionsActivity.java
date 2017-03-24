@@ -108,6 +108,7 @@ public class DisplayOptionsActivity extends AppCompatActivity {
         if (cbExecuteOneStep.isChecked()) {
             displayOptions.setCurrentStopFlag(true);
             displayOptions.setNumberStepsBeforeStop(1);
+            displayOptions.setBeginnerStopFlag(true);
         } else if (cbExecuteNumberStep.isChecked()) {
             displayOptions.setCurrentStopFlag(true);
             int numberSteps = Integer.parseInt(etNumberSteps.getText().toString());
@@ -116,8 +117,12 @@ public class DisplayOptionsActivity extends AppCompatActivity {
                 return false;
             }
             displayOptions.setNumberStepsBeforeStop(numberSteps);
+            displayOptions.setBeginnerStopFlag(true);
         } else {
             displayOptions.setCurrentStopFlag(false);
+            //if (displayOptions.inBeginWithStop()) {
+            displayOptions.setBeginnerStopFlag(false);
+            //}
         }
         return true;
     }

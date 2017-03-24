@@ -1,5 +1,7 @@
 package model;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +24,11 @@ public class Model implements IModel {
 
     private Results results;
 
-    public Model() {
+    public Model(Context context) {
         results = new Results();
         observers = new ArrayList<>();
         storageTasksList = new ArrayList<>();
-        displayOptions = new DisplayOptions();
+        displayOptions = new DisplayOptions(context);
         currentStorage = 0;
     }
 
@@ -57,9 +59,9 @@ public class Model implements IModel {
     }
 
     @Override
-    public void continueDrawing(boolean withStop) {
+    public void continueDrawing(boolean withStop, int n) {
         displayOptions.setCurrentStopFlag(withStop);
-        observers.get(numberStoppedTask).continueDrawing(displayOptions);
+        observers.get(n).continueDrawing(displayOptions);
     }
 
     @Override

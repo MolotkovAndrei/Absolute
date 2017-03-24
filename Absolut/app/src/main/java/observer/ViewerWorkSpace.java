@@ -30,7 +30,7 @@ public class ViewerWorkSpace extends View implements IObserver {
     private IModel model;
     private List<Dot> points = new ArrayList<>();
     private StorageTasks storageTasks;
-    private DisplayOptions displayOptions = new DisplayOptions();
+    private DisplayOptions displayOptions;
     private boolean isRun = true;
     private CalculatorSensors calculatorSensors;
 
@@ -48,7 +48,9 @@ public class ViewerWorkSpace extends View implements IObserver {
 
     public ViewerWorkSpace(Context context, IModel model) {
         super(context);
+        //displayOptions = new DisplayOptions(context);
         this.model = model;
+        displayOptions = model.getDisplayOptions();
         model.registerObserver(this);
         ITask task = model.getCurrentStorage().getCurrentTask();
         numberLimitedFunctions = task.getLimitationFunctions().size();
@@ -243,6 +245,9 @@ public class ViewerWorkSpace extends View implements IObserver {
                 invalidate();
             } else if (!isRun || indexSteps >= displayOptions.getNumberStepsBeforeStop() - 1) {
                 displayOptions.setDrawing(false);
+                if (index >= points.size() - 1) {
+                    displayOptions.setDrawingFinish(true);
+                }
                 return;
             } else if (/*(index >= points.size() - 1) && */(indexTask < numberTasks - 1)) {
                 indexTask++;

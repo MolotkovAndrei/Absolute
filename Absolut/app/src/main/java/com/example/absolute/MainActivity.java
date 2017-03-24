@@ -61,8 +61,8 @@ import task.StorageTasks;
 import task.Task;
 import task.TaskWithLimitations;
 
-public class MainActivity extends AppCompatActivity implements DialogListener {
-    private Model model = new Model();
+public class MainActivity extends AppCompatActivity implements DialogListener, DisplayOptionsListener {
+    private Model model;
     private int currentTab;
 
     private Toolbar toolbar;
@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        model = new Model(MainActivity.this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -187,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
                 actionSubItemContinueTask();
                 break;
             case R.id.sub_item_display_tempo:
+                model.getDisplayOptions().setListener(null);
                 intent = DisplayOptionsActivity.newIntent(MainActivity.this, model.getDisplayOptions());
                 startActivityForResult(intent, REQUEST_CODE_DISPLAY_OPTIONS);
                 break;
@@ -236,11 +239,11 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
                 }
                 break;
             case R.id.itemNextStep:
-                model.continueDrawing(model.getDisplayOptions().isCurrentWithStop());
+                model.continueDrawing(model.getDisplayOptions().isCurrentWithStop(), currentTab);
                 invalidateOptionsMenu();
                 break;
             case R.id.itemExecuteWithoutStop:
-                model.continueDrawing(!model.getDisplayOptions().isCurrentWithStop());
+                model.continueDrawing(!model.getDisplayOptions().isCurrentWithStop(), currentTab);
                 invalidateOptionsMenu();
                 break;
             case R.id.itemCloseMenu:
@@ -280,6 +283,9 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
             switch (requestCode) {
                 case REQUEST_CODE_DISPLAY_OPTIONS:
                     DisplayOptions displayOptions = DisplayOptionsActivity.getDisplayOptions(data);
+                    canCloseMenuBetweenSteps = true;
+                    displayOptions.setListener(MainActivity.this);
+                    updateMenuItems();
                     model.setDisplayOptions(displayOptions);
                     break;
                 case REQUEST_CODE_RUN_SERIES:
@@ -376,7 +382,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
     }
 
     private void actionSubItemContinueTask() {
-        model.continueDrawing(model.getDisplayOptions().isCurrentWithStop());
+        model.continueDrawing(model.getDisplayOptions().isCurrentWithStop(), tabHost.getCurrentTab());
         canCloseMenuBetweenSteps = false;
         invalidateOptionsMenu();
     }
@@ -494,6 +500,11 @@ public class MainActivity extends AppCompatActivity implements DialogListener {
         FragmentManager manager = getSupportFragmentManager();
         CloseTabFragment dialog = new CloseTabFragment();
         dialog.show(manager, DIALOG_CLOSE_TAB);
+    }
+
+    @Override
+    public void updateMenuItems() {
+        invalidateOptionsMenu();
     }
 }
 

@@ -86,6 +86,8 @@ public class CalculatorSensorsUnlimited extends CalculatorSensors {
 
     @Override
     public void drawSensors(Canvas canvas, int index) {
+        System.out.println("index: " + index);
+
         drawerPlot.draw(canvas, index);
         if (isDensityPoints) {
             calculatorDensityPoints.draw(canvas, index);
