@@ -4,7 +4,7 @@ import model.DisplayOptions;
 import task.StorageTasks;
 
 public interface IObserver {
-    void update(StorageTasks storageTasks, DisplayOptions displayOptions);
+    void update(StorageTasks storageTasks);
     void stopDrawing();
-    void continueDrawing(DisplayOptions displayOptions);
+    void continueDrawing(StorageTasks storageTasks);
 }

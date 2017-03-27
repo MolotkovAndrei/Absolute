@@ -84,14 +84,14 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
     private static final String DIALOG_CLOSE_TAB = "DialogCloseTab";
 
     private final String TAB_TAG = "tag";
-    private boolean canCloseMenuBetweenSteps = false;
+    //private boolean canCloseMenuBetweenSteps = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        model = new Model(MainActivity.this);
+        model = new Model();
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,6 +100,13 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
         LocalActivityManager localActivityManager = new LocalActivityManager(this, false);
         localActivityManager.dispatchCreate(savedInstanceState);
         tabHost.setup(localActivityManager);
+
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String s) {
+                invalidateOptionsMenu();
+            }
+        });
     }
 
     @Override
@@ -116,31 +123,31 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
 
         currentTab = tabHost.getCurrentTab();
         MenuItem item;
-        if (model.getDisplayOptions().isDrawingFinish()) {
+        if (model.isDrawingFinish(currentTab)) {
             menu.clear();
             getMenuInflater().inflate(R.menu.menu_main, menu);
             item = menu.findItem(R.id.sub_item_continue_task);
             item.setVisible(false);
             item = menu.findItem(R.id.menu_item_remove_task);
             item.setVisible(true);
-            canCloseMenuBetweenSteps = false;
-        } else if (model.getDisplayOptions().isDrawing()) {
+            model.setCloseMenuBetweenSteps(currentTab, false);
+        } else if (model.isDrawing(currentTab)) {
             menu.clear();
             getMenuInflater().inflate(R.menu.menu_stop_drawing, menu);
-            canCloseMenuBetweenSteps = false;
-        } else if (model.getDisplayOptions().isCurrentWithStop()) {
+            model.setCloseMenuBetweenSteps(currentTab, false);
+        } else if (model.isCurrentWithStop(currentTab)) {
             menu.clear();
-            if (canCloseMenuBetweenSteps) {
+            if (model.canCloseMenuBetweenSteps(currentTab)) {
                 getMenuInflater().inflate(R.menu.menu_main, menu);
                 item = menu.findItem(R.id.sub_item_continue_task);
                 item.setVisible(true);
             } else {
                 getMenuInflater().inflate(R.menu.menu_between_steps, menu);
             }
-        } else if (model.getDisplayOptions().inBeginWithStop()) {
+        } else if (model.inBeginWithStop(currentTab)) {
             menu.clear();
             getMenuInflater().inflate(R.menu.menu_between_steps, menu);
-            model.getDisplayOptions().setCurrentStopFlag(!model.getDisplayOptions().isCurrentWithStop());
+            model.setCurrentStopFlag(currentTab, !model.isCurrentWithStop(currentTab));
         } else {
             menu.clear();
             getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -189,8 +196,8 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
                 actionSubItemContinueTask();
                 break;
             case R.id.sub_item_display_tempo:
-                model.getDisplayOptions().setListener(null);
-                intent = DisplayOptionsActivity.newIntent(MainActivity.this, model.getDisplayOptions());
+                model.setDisplayOptionsListener(currentTab, null);
+                intent = DisplayOptionsActivity.newIntent(MainActivity.this, model.getDisplayOptions(currentTab));
                 startActivityForResult(intent, REQUEST_CODE_DISPLAY_OPTIONS);
                 break;
             case R.id.sub_item_execute_serial:
@@ -235,19 +242,19 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
                     storageTasks.clearStorage();
                     storageTasks.addTask(task);
                     model.setStorageTask(currentTab, storageTasks);
-                    model.getDisplayOptions().setDrawingFinish(true);
+                    model.setDrawingFinish(currentTab, true);
                 }
                 break;
             case R.id.itemNextStep:
-                model.continueDrawing(model.getDisplayOptions().isCurrentWithStop(), currentTab);
+                model.continueDrawing(model.isCurrentWithStop(currentTab), currentTab);
                 invalidateOptionsMenu();
                 break;
             case R.id.itemExecuteWithoutStop:
-                model.continueDrawing(!model.getDisplayOptions().isCurrentWithStop(), currentTab);
+                model.continueDrawing(!model.isCurrentWithStop(currentTab), currentTab);
                 invalidateOptionsMenu();
                 break;
             case R.id.itemCloseMenu:
-                canCloseMenuBetweenSteps = true;
+                model.setCloseMenuBetweenSteps(currentTab, true);
                 invalidateOptionsMenu();
                 break;
             case R.id.indexAlgorithm:
@@ -255,12 +262,12 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
                 final int NUMBER_ITERATIONS = 200;
                 final double PARAMETER = 2.0;
                 ITask newTask = new IndexTask(new Settings(EPS, NUMBER_ITERATIONS, PARAMETER));
-                storageTasks = new StorageTasks(newTask);
+                storageTasks = new StorageTasks(MainActivity.this, newTask);
                 model.setStorageTask(currentTab, storageTasks);
                 break;
             case R.id.penaltyAlgorithm:
                 ITask newTask1 = new PenaltyTask(new Settings(0.001, 200, 2.0));
-                storageTasks = new StorageTasks(newTask1);
+                storageTasks = new StorageTasks(MainActivity.this, newTask1);
                 model.setStorageTask(currentTab, storageTasks);
                 break;
             case R.id.item_set_limited_task:
@@ -283,17 +290,17 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
             switch (requestCode) {
                 case REQUEST_CODE_DISPLAY_OPTIONS:
                     DisplayOptions displayOptions = DisplayOptionsActivity.getDisplayOptions(data);
-                    canCloseMenuBetweenSteps = true;
+                    model.setCloseMenuBetweenSteps(currentTab, true);
                     displayOptions.setListener(MainActivity.this);
                     updateMenuItems();
-                    model.setDisplayOptions(displayOptions);
+                    model.setDisplayOptions(displayOptions, currentTab);
                     break;
                 case REQUEST_CODE_RUN_SERIES:
                     RunSeriesActivity.TaskType taskType = RunSeriesActivity.getTaskType(data);
                     createSerialTasks(storageTasks, taskType);
                     //model.getDisplayOptions().setStopFlag(false);
-                    model.getDisplayOptions().setDrawing(true);
-                    model.getDisplayOptions().setDrawingFinish(false);
+                    model.setDrawing(currentTab, true);
+                    model.setDrawingFinish(currentTab, false);
                     model.setStorageTask(currentTab, storageTasks);
                     model.calculateTask(currentTab);
                     break;
@@ -319,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
                     break;
                 case REQUEST_CODE_SET_LIMITED_FUNCTIONS:
                     SetLimitedFunctionsActivity.setLimitedFunctions(data, storageTasks);
-                    int i = storageTasks.getCurrentLimitationFunctions().size();
+                    //int i = storageTasks.getCurrentLimitationFunctions().size();
 
                     model.setStorageTask(currentTab, storageTasks);
                     break;
@@ -341,7 +348,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
             newTask = new IndexTask(new Settings(EPS, NUMBER_ITERATIONS, PARAMETER)); //TaskWithLimitations(new Settings(EPS, NUMBER_ITERATIONS, PARAMETER));
         }
 
-        StorageTasks newStorage = new StorageTasks(newTask);
+        StorageTasks newStorage = new StorageTasks(MainActivity.this, newTask);
         newStorage.setName(nameNewTab);
         model.addTask(newStorage);
 
@@ -382,15 +389,16 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
     }
 
     private void actionSubItemContinueTask() {
-        model.continueDrawing(model.getDisplayOptions().isCurrentWithStop(), tabHost.getCurrentTab());
-        canCloseMenuBetweenSteps = false;
+        model.continueDrawing(model.isCurrentWithStop(currentTab), tabHost.getCurrentTab());
+        model.setCloseMenuBetweenSteps(currentTab, false);
         invalidateOptionsMenu();
     }
 
     private void actionSubItemExecuteTask() {
-        model.getDisplayOptions().setDrawing(true);
-        model.getDisplayOptions().setDrawingFinish(false);
-        model.getDisplayOptions().setBeginnerStopFlag(model.getDisplayOptions().isCurrentWithStop());
+        currentTab = tabHost.getCurrentTab();
+        model.setDrawing(currentTab, true);
+        model.setDrawingFinish(currentTab, false);
+        model.setBeginnerStopFlag(currentTab, model.isCurrentWithStop(currentTab));
         invalidateOptionsMenu();
         model.calculateTask(currentTab);
     }

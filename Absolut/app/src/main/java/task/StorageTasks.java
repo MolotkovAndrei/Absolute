@@ -1,5 +1,9 @@
 package task;
 
+import android.content.Context;
+
+import com.example.absolute.DisplayOptionsListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,17 +20,80 @@ import algorithm.withoutLimitation.RandomSearch;
 import algorithm.withoutLimitation.SequentalScan;
 import algorithm.Settings;
 import function.IFunction;
+import model.DisplayOptions;
 
 public class StorageTasks {
     private List<ITask> taskList = new ArrayList<>();
     private String name = "";
     private ITask currentTask;
     private IAlgorithm algorithm;
+    private DisplayOptions displayOptions;
 
-    public StorageTasks(final ITask task) {
+    public StorageTasks(Context context, final ITask task) {
         taskList.add(task);
         algorithm = task.getAlgorithm();
         currentTask = task;
+        displayOptions = new DisplayOptions(context);
+    }
+
+    public DisplayOptions getDisplayOptions() {
+        return displayOptions;
+    }
+
+    public void setDisplayOptions(DisplayOptions displayOptions) {
+        this.displayOptions = displayOptions;
+    }
+
+    public boolean isDrawingFinish() {
+        return displayOptions.isDrawingFinish();
+    }
+
+    public void setDrawingFinish(boolean isDrawingFinish) {
+        displayOptions.setDrawingFinish(isDrawingFinish);
+    }
+
+    public boolean isDrawing() {
+        return displayOptions.isDrawing();
+    }
+
+    public void setDrawing(boolean isDrawing) {
+        displayOptions.setDrawing(isDrawing);
+    }
+
+    public boolean isCurrentWithStop() {
+        return displayOptions.isCurrentWithStop();
+    }
+
+    public boolean inBeginWithStop() {
+        return displayOptions.inBeginWithStop();
+    }
+
+    public void setBeginnerStopFlag(boolean beginnerStopFlag) {
+        displayOptions.setBeginnerStopFlag(beginnerStopFlag);
+    }
+
+    public int getNumberStepsBeforeStop() {
+        return displayOptions.getNumberStepsBeforeStop();
+    }
+
+    public void setCurrentStopFlag(boolean withStop) {
+        displayOptions.setCurrentStopFlag(withStop);
+    }
+
+    public long getValueDisplaySpeed() {
+        return displayOptions.getValueDisplaySpeed();
+    }
+
+    public void setDisplayOptionsListener(DisplayOptionsListener listener) {
+        displayOptions.setListener(listener);
+    }
+
+    public boolean canCloseMenuBetweenSteps() {
+        return displayOptions.canCloseMenuBetweenSteps();
+    }
+
+    public void setcloseMenuBetweenSteps(boolean canCloseMenuBetweenSteps) {
+        displayOptions.setCloseMenuBetweenSteps(canCloseMenuBetweenSteps);
     }
 
     public void setAlgorithm(final IAlgorithm algorithm) {

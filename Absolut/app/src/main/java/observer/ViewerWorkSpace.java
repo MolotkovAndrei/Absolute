@@ -30,7 +30,7 @@ public class ViewerWorkSpace extends View implements IObserver {
     private IModel model;
     private List<Dot> points = new ArrayList<>();
     private StorageTasks storageTasks;
-    private DisplayOptions displayOptions;
+    //private DisplayOptions displayOptions;
     private boolean isRun = true;
     private CalculatorSensors calculatorSensors;
 
@@ -50,9 +50,10 @@ public class ViewerWorkSpace extends View implements IObserver {
         super(context);
         //displayOptions = new DisplayOptions(context);
         this.model = model;
-        displayOptions = model.getDisplayOptions();
+        //displayOptions = model.getDisplayOptions();
         model.registerObserver(this);
-        ITask task = model.getCurrentStorage().getCurrentTask();
+        storageTasks = model.getCurrentStorage();
+        ITask task = storageTasks.getCurrentTask();
         numberLimitedFunctions = task.getLimitationFunctions().size();
          //new TaskWithLimitations(new Settings(0.001, 200, 2.0));//new Task(new Settings(0.001, 200, 2.0));
         //ITask task = new Task(new Settings(0.001, 200, 2.0));
@@ -169,8 +170,8 @@ public class ViewerWorkSpace extends View implements IObserver {
     }
 
     @Override
-    public void update(final StorageTasks storageTasks, DisplayOptions displayOptions) {
-        this.displayOptions = displayOptions;
+    public void update(final StorageTasks storageTasks) {
+        //this.displayOptions = displayOptions;
         this.storageTasks = storageTasks;
         ITask task = storageTasks.getTaskList().get(0);
         this.points = task.getStorage();
@@ -209,22 +210,22 @@ public class ViewerWorkSpace extends View implements IObserver {
     @Override
     public void stopDrawing() {
         isRun = false;
-        displayOptions.setDrawing(false);
+        storageTasks.setDrawing(false);
         //invalidate();
     }
 
     @Override
-    public void continueDrawing(DisplayOptions displayOptions) {
-        this.displayOptions = displayOptions;
+    public void continueDrawing(StorageTasks storageTasks) {
+        this.storageTasks = storageTasks;
         index++;
         try {
-            indexSteps = index % displayOptions.getNumberStepsBeforeStop();
+            indexSteps = index % storageTasks.getNumberStepsBeforeStop();
         } catch (ArithmeticException e) {
             indexSteps = 0;
         }
 
         isRun = true;
-        displayOptions.setDrawing(true);
+        storageTasks.setDrawing(true);
         invalidate();
     }
 
@@ -233,20 +234,20 @@ public class ViewerWorkSpace extends View implements IObserver {
         canvas.drawARGB(80, 102, 204, 255);
         calculatorSensors.drawSensors(canvas, index);
         //mCalculatorSensorsWithLimitation.drawSensors(canvas, index);
-        if (displayOptions.isCurrentWithStop()) {
-            if (isRun && (index < points.size() - 1) && (indexSteps < displayOptions.getNumberStepsBeforeStop() - 1)) {
+        if (storageTasks.isCurrentWithStop()) {
+            if (isRun && (index < points.size() - 1) && (indexSteps < storageTasks.getNumberStepsBeforeStop() - 1)) {
                 index++;
                 indexSteps++;
                 try {
-                    Thread.sleep(displayOptions.getDisplaySpeed().getTimeSleepMillisecond());
+                    Thread.sleep(storageTasks.getValueDisplaySpeed());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 invalidate();
-            } else if (!isRun || indexSteps >= displayOptions.getNumberStepsBeforeStop() - 1) {
-                displayOptions.setDrawing(false);
+            } else if (!isRun || indexSteps >= storageTasks.getNumberStepsBeforeStop() - 1) {
+                storageTasks.setDrawing(false);
                 if (index >= points.size() - 1) {
-                    displayOptions.setDrawingFinish(true);
+                    storageTasks.setDrawingFinish(true);
                 }
                 return;
             } else if (/*(index >= points.size() - 1) && */(indexTask < numberTasks - 1)) {
@@ -259,20 +260,20 @@ public class ViewerWorkSpace extends View implements IObserver {
                 //mCalculatorSensorsWithLimitation.updateData(task);
                 invalidate();
             } else {
-                displayOptions.setDrawing(false);
-                displayOptions.setDrawingFinish(true);
+                storageTasks.setDrawing(false);
+                storageTasks.setDrawingFinish(true);
             }
         } else {
             if (isRun && index < points.size() - 1) {
                 index++;
                 try {
-                    Thread.sleep(displayOptions.getDisplaySpeed().getTimeSleepMillisecond());
+                    Thread.sleep(storageTasks.getValueDisplaySpeed());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 invalidate();
             } else if (!isRun) {
-                displayOptions.setDrawing(false);
+                storageTasks.setDrawing(false);
                 return;
             } else if (/*(index >= points.size() - 1) && */(indexTask < numberTasks - 1)) {
                 indexTask++;
@@ -283,8 +284,8 @@ public class ViewerWorkSpace extends View implements IObserver {
                 //mCalculatorSensorsWithLimitation.updateData(task);
                 invalidate();
             } else {
-                displayOptions.setDrawing(false);
-                displayOptions.setDrawingFinish(true);
+                storageTasks.setDrawing(false);
+                storageTasks.setDrawingFinish(true);
             }
         }
 

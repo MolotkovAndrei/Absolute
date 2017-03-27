@@ -30,12 +30,15 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
     private List<Dot> dots;
     private int heightPanelForPlot;
 
+    private boolean[] isIndex;
+
     public CalculatorSensorsIndexTask(final ITask task) {
         super(task);
 
         int countLimitedFunctions = task.getLimitationFunctions().size();
         indexesForDraw = new int[countLimitedFunctions + 2];
         dots = task.getStorage();
+        isIndex = new boolean[dots.size() + 1];
         drawerPlotsLimitedFunctions = new ArrayList<>();
         mDrawerDistributionPoints = new ArrayList<>();
         drawerDistributionValues = new ArrayList<>();
@@ -246,6 +249,12 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
             indexDots.add(new ArrayList<Dot>());
         }
         dots = task.getStorage();
+        if (dots.size() != isIndex.length) {
+            isIndex = new boolean[dots.size()];
+        }
+        for (Boolean b : isIndex) {
+            b = false;
+        }
         for (int i = 0; i < dots.size(); i++) {
             indexDots.get(dots.get(i).index).add(dots.get(i));
         }
@@ -257,6 +266,7 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
         for (int i = 1; i < countLimitedFunctions + 1; i++) {
             function = task.getLimitationFunctions().get(i - 1);
             dotsForDraw = indexDots.get(i);
+            System.out.println("dotsForDraw.size= " + "i: "+ i + " "+dotsForDraw.size());
             updateDrawersSensors(function, dotsForDraw, i);
         }
         if (isDistributionPoints) {
@@ -279,14 +289,15 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
         }
         mHiderInvalidPoints.draw(canvas);
 
-        if (index < dots.size() - 1) {
+        if (!isIndex[index] && index < dots.size() - 1) {
             indexesForDraw[dots.get(index).index]++;
+            isIndex[index] = true;
         }
 
         int indexForDraw = indexesForDraw[indexesForDraw.length - 1];
-        System.out.println("index= "+index);
+        /*System.out.println("index= "+index);
         System.out.println("indexesForDraw= "+indexForDraw);
-        System.out.println("drawPoints= "+mDrawerDistributionPoints.get(0).getDrawPoints().size());
+        System.out.println("drawPoints= "+mDrawerDistributionPoints.get(0).getDrawPoints().size());*/
         if (isDistributionPoints) {
             mDrawerDistributionPoints.get(0).draw(canvas, indexForDraw);
         }
@@ -297,10 +308,13 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
             drawerDynamicsValues.get(0).draw(canvas, indexForDraw-1);
         }
         if (isDensityValues) {
-            drawerDensityValues.get(0).draw(canvas, indexForDraw);
+            drawerDensityValues.get(0).draw(canvas, Math.max(0, indexForDraw));
         }
         int i;
         for (i = 1; i < mDrawerDistributionPoints.size() - 1; i++) {
+            System.out.println("index= "+index);
+            System.out.println("indexesForDraw= "+indexesForDraw[i]);
+            System.out.println("drawPoints= "+mDrawerDistributionPoints.get(i).getDrawPoints().size());
             if (isDistributionPoints) {
                 mDrawerDistributionPoints.get(i).draw(canvas, indexesForDraw[i]);
             }
@@ -308,10 +322,10 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
                 drawerDistributionValues.get(i).draw(canvas, indexesForDraw[i]);
             }
             if (isDynamicsValues) {
-                drawerDynamicsValues.get(i).draw(canvas, indexesForDraw[i]-1);
+                drawerDynamicsValues.get(i).draw(canvas, indexesForDraw[i]);
             }
             if (isDensityValues) {
-                drawerDensityValues.get(i).draw(canvas, indexesForDraw[i]);
+                drawerDensityValues.get(i).draw(canvas, Math.max(0, indexesForDraw[i]));
             }
         }
         if (isDistributionPoints) {
@@ -350,7 +364,7 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
 
     private void updateDrawersPlots(ITask task, int countLimitedFunctions) {
         for (int i = 0; i < indexesForDraw.length; i++) {
-            indexesForDraw[i] = 0;
+            indexesForDraw[i] = -1;
         }
         drawerPlotMinimizedFunction.setContent(task.getMinimizedFunction());
         for (int i = 0; i < countLimitedFunctions; i++) {

@@ -15,6 +15,7 @@ public class DisplayOptions implements Serializable {
     private boolean isDrawing = false;
     private boolean isDrawingFinish = true;
     private float scaleFactor = 1.0f;
+    private boolean canCloseMenuBetweenSteps = false;
 
     public DisplayOptions(Context context) {
         try {
@@ -40,12 +41,24 @@ public class DisplayOptions implements Serializable {
         private long timeSleepMillisecond;
     }
 
+    public boolean canCloseMenuBetweenSteps() {
+        return canCloseMenuBetweenSteps;
+    }
+
+    public void setCloseMenuBetweenSteps(boolean canCloseMenuBetweenSteps) {
+        this.canCloseMenuBetweenSteps = canCloseMenuBetweenSteps;
+    }
+
     public float getScaleFactor() {
         return scaleFactor;
     }
 
     public void setScaleFactor(float scaleFactor) {
         this.scaleFactor = scaleFactor;
+    }
+
+    public long getValueDisplaySpeed() {
+        return displaySpeed.getTimeSleepMillisecond();
     }
 
     public DisplaySpeed getDisplaySpeed() {

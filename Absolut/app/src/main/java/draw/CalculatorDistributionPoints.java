@@ -27,11 +27,19 @@ public class CalculatorDistributionPoints extends DrawerSensor {
 
     @Override
     public void draw(Canvas canvas, int index) {
+        if (drawPoints.size() == 0) {
+            paint.setColor(Color.BLACK);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(4);
+
+            canvas.drawRect(drawPanel, paint);
+            return;
+        }
         paint.setColor(Color.argb(255, 255, 0, 255));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(1);
 
-        for (int i = 0; i < index; i++) {
+        for (int i = 0; i <= index; i++) {
             canvas.drawLine(drawPoints.get(i).x, drawPanel.top,
                     drawPoints.get(i).x, drawPanel.bottom, paint);
         }

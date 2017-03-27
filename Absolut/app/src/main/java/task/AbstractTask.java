@@ -6,6 +6,7 @@ import java.util.List;
 import algorithm.IAlgorithm;
 import algorithm.Settings;
 import function.IFunction;
+import model.DisplayOptions;
 import storage.Dot;
 
 public abstract class AbstractTask implements ITask {
