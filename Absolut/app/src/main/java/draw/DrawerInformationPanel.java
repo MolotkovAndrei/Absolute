@@ -28,7 +28,7 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
     private final double[] ACCURACY_SEGMENT = {1.0e-2, 1.0e-3, 1.0e-4, 1.0e-5};
     protected Dot currentPoint = new Dot();
     protected Dot bestPoint = new Dot();
-    private int numberBestPoint;
+    private int numberBestPoint = 1;
     private String bestPointX = "";
     private String bestPointY = "";
     private String currentPointX = "";
@@ -36,8 +36,15 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
     private String numberBestPointStr = "";
     private String numberCurrentPointStr = "";
     private final int INDENT_TEXT_LEFT = 5;
-    private final int INDENT_TEXT_TOP = 10;
+    private final int INDENT_TEXT_TOP = 15;
     //private int indexPoints = 0;
+
+    private int heightPanelParameter;
+    private int heightPanelBestPoint;
+    private final float COEFFICIENT_HEIGHT_PANEL_PARAMETER = 0.15f;
+    private final float COEFFICIENT_INDENT_ACCURACY_SENSOR = 0.04f;
+    private final float COEFFICIENT_TEXT_SIZE = 0.02f;
+    private int indentAccuracySensor;
 
     public DrawerInformationPanel(ITask task, Rect drawPanel) {
         super(task, drawPanel);
@@ -55,8 +62,7 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
         this.dots = task.getStorage();
         this.exactValue = task.getExactValue();
         this.settings = task.getSettings();
-        //indexPoints = task.getLimitationFunctions().size() + 1;
-        //calculatePointsForDraw();
+        setStartValues();
         setFirstValuePoints();
     }
 
@@ -72,22 +78,27 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
         calculateAccuracySensor(canvas);
 
         paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
         paint.setStrokeWidth(scaleFactor);
-        paint.setTextSize(10 * scaleFactor);
+        paint.setTextSize(drawPanel.height() * COEFFICIENT_TEXT_SIZE);
 
-        drawAccuracySensor(canvas);
+
         printInformationBestPoint(canvas);
         printInformationCurrentPoint(canvas);
         printInformationParametersTask(canvas);
         printInformationResources(canvas, index);
+        drawAccuracySensor(canvas);
+        paint.setStyle(Paint.Style.STROKE);
         drawFrame(canvas);
     }
 
     private void createOtherPanels() {
         if (drawPanel.width() < drawPanel.height()) {
+            heightPanelParameter = (int)(drawPanel.height() * COEFFICIENT_HEIGHT_PANEL_PARAMETER);
+            heightPanelBestPoint = heightPanelParameter;
             createVerticalOrientationPanels();
         } else {
+            heightPanelParameter = (int)(drawPanel.height() * COEFFICIENT_HEIGHT_PANEL_PARAMETER);
             createHorizontalOrientationPanels();
         }
         createAccuracySensor();
@@ -95,16 +106,15 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
     }
 
     private void createHorizontalOrientationPanels() {
-        final int HEIGHT_PANELS_PARAMETERS = 50;
         int rightPointPanelForCurrentPoint = drawPanel.left + drawPanel.width() / 3;
         int rightPointPanelForParameters = drawPanel.left + drawPanel.width() / 2;
 
         panelParametersTask.set(drawPanel.left, drawPanel.top,
-                rightPointPanelForParameters, (int) (drawPanel.top + HEIGHT_PANELS_PARAMETERS * scaleFactor));
+                rightPointPanelForParameters, drawPanel.top + heightPanelParameter);
         stepPanelParameters = panelParametersTask.height() / 2;
 
         panelResourcesTask.set(panelParametersTask.right, drawPanel.top,
-                drawPanel.right, (int) (drawPanel.top + HEIGHT_PANELS_PARAMETERS * scaleFactor));
+                drawPanel.right, drawPanel.top + heightPanelParameter);
         stepPanelResources = stepPanelParameters;
 
         int heightPanelsCurrentPoint = (drawPanel.bottom - panelParametersTask.bottom) / 2;
@@ -122,19 +132,17 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
     }
 
     private void createVerticalOrientationPanels() {
-        final int HEIGHT_PANELS_PARAMETERS = 50;
-        final int HEIGHT_PANEL_BEST_POINT = 75;
         int rightPointPanelForParameters = drawPanel.left + drawPanel.width() / 2;
         panelParametersTask.set(drawPanel.left, drawPanel.top,
-                rightPointPanelForParameters, drawPanel.top + (int)(HEIGHT_PANELS_PARAMETERS * scaleFactor));
+                rightPointPanelForParameters, drawPanel.top + heightPanelParameter);
         stepPanelParameters = panelParametersTask.height() / 2;
 
         panelResourcesTask.set(panelParametersTask.right, drawPanel.top,
-                drawPanel.right, drawPanel.top + (int)(HEIGHT_PANELS_PARAMETERS * scaleFactor));
+                drawPanel.right, drawPanel.top + heightPanelParameter);
         stepPanelResources = stepPanelParameters;
 
         panelBestPointTask.set(drawPanel.left, panelParametersTask.bottom,
-                rightPointPanelForParameters, (int)(panelParametersTask.bottom + HEIGHT_PANEL_BEST_POINT * scaleFactor));
+                rightPointPanelForParameters, panelParametersTask.bottom + heightPanelBestPoint);
         stepPanelBestPoint = panelBestPointTask.height() / 3;
 
         panelCurrentPointTask.set(panelBestPointTask.right, panelParametersTask.bottom,
@@ -145,9 +153,11 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
     }
 
     private void createAccuracySensor() {
-        final int INDENT = (int) (20 * scaleFactor);
-        accuracyRect.set(panelAccuracySensor.left + INDENT, panelAccuracySensor.top + INDENT,
-                panelAccuracySensor.right - INDENT, panelAccuracySensor.bottom - INDENT);
+        indentAccuracySensor = (int) (drawPanel.height() * COEFFICIENT_INDENT_ACCURACY_SENSOR);
+        accuracyRect.set(panelAccuracySensor.left + indentAccuracySensor,
+                panelAccuracySensor.top + indentAccuracySensor,
+                panelAccuracySensor.right - indentAccuracySensor,
+                panelAccuracySensor.bottom - indentAccuracySensor);
         accuracyRectInto.set(accuracyRect);
     }
 
@@ -219,19 +229,22 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
         currentPoint.y = dots.get(index).y;
         currentPoint.index = dots.get(index).index;
         roundNumber(currentPoint, 1000000);
-        changeBestPoint(index);
+        if (changeBestPoint(index)) {
+            bestPointX = String.valueOf(bestPoint.x);
+            bestPointY = String.valueOf(bestPoint.y);
+            numberBestPointStr = String.valueOf(numberBestPoint);
+        }
         currentPointX = String.valueOf(currentPoint.x);
         currentPointY = String.valueOf(currentPoint.y);
-        bestPointX = String.valueOf(bestPoint.x);
-        bestPointY = String.valueOf(bestPoint.y);
-        numberBestPointStr = String.valueOf(numberBestPoint);
         numberCurrentPointStr = String.valueOf(index + 1);
     }
 
-    protected void changeBestPoint(int index) {
+    protected boolean changeBestPoint(int index) {
         if (bestPoint.y > currentPoint.y) {
             setBestPoint(index);
+            return true;
         }
+        return false;
     }
 
     protected void setBestPoint(int index) {
@@ -281,22 +294,26 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
     }
 
     private void drawAccuracySensor(Canvas canvas) {
+        paint.setStyle(Paint.Style.STROKE);
         canvas.drawRect(panelAccuracySensor, paint);
         canvas.drawRect(accuracyRect, paint);
         canvas.drawRect(accuracyRectInto, paint);
+        paint.setStyle(Paint.Style.FILL_AND_STROKE);
 
         final String LOG_DELTA_Z = "log \u0394Z";
         final String LOG_DELTA_X = "log \u0394X";
         final String MIN = "min";
         final int INDENT = 10;
 
+        int textBottomBorder = indentAccuracySensor / 2;
+
 
         canvas.drawText(LOG_DELTA_Z, accuracyRect.left,
-                panelAccuracySensor.top + INDENT_TEXT_TOP * scaleFactor, paint);
+                panelAccuracySensor.top + textBottomBorder, paint);
         canvas.drawText(LOG_DELTA_X, accuracyRect.right - 30 * scaleFactor,
-                accuracyRect.bottom + INDENT_TEXT_TOP * scaleFactor, paint);
+                accuracyRect.bottom + textBottomBorder, paint);
         canvas.drawText(MIN, accuracyRect.left,
-                accuracyRect.bottom + INDENT_TEXT_TOP * scaleFactor, paint);
+                accuracyRect.bottom + textBottomBorder, paint);
         for (int i = 0; i < 4; i++) {
             canvas.drawLine(accuracySegmentsX[i], accuracyRect.bottom - INDENT * scaleFactor, accuracySegmentsX[i], accuracyRect.bottom, paint);
             canvas.drawLine(accuracyRect.left, accuracySegmentsY[i], accuracyRect.left + INDENT * scaleFactor, accuracySegmentsY[i], paint);

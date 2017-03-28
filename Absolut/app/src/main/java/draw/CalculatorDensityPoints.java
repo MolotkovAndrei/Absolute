@@ -49,7 +49,7 @@ public class CalculatorDensityPoints extends DrawerSensor {
             }
         }
         for (int i = 0; i < drawPoints.size(); i++) {
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j <= i; j++) {
                 if (drawPoints.get(j).x / stepOfColumn >= NUMBER_OF_COLUMNS) {
                     densityPoints[i][NUMBER_OF_COLUMNS - 1]++;
                 } else {

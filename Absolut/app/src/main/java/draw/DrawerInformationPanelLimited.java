@@ -13,7 +13,7 @@ public class DrawerInformationPanelLimited extends DrawerInformationPanel {
 
     @Override
     public void setContent(ITask task) {
-        indexPoints = indexPoints = task.getLimitationFunctions().size() + 1;
+        indexPoints = task.getLimitationFunctions().size() + 1;
         super.setContent(task);
     }
 
@@ -36,9 +36,11 @@ public class DrawerInformationPanelLimited extends DrawerInformationPanel {
     }
 
     @Override
-    protected void changeBestPoint(int index) {
+    protected boolean changeBestPoint(int index) {
         if (currentPoint.index == indexPoints && bestPoint.y > currentPoint.y) {
             setBestPoint(index);
+            return true;
         }
+        return false;
     }
 }

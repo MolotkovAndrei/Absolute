@@ -27,10 +27,10 @@ public class Settings implements Serializable {
 
         isCheckedSensors[0] = true;
         isCheckedSensors[1] = true;
-        isCheckedSensors[2] = true;
-        isCheckedSensors[3] = false;
-        isCheckedSensors[4] = false;
-        isCheckedSensors[5] = true;
+        isCheckedSensors[2] = false;
+        isCheckedSensors[3] = true;
+        isCheckedSensors[4] = true;
+        isCheckedSensors[5] = false;
     }
 
     public double getEps() {

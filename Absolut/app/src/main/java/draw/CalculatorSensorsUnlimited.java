@@ -26,8 +26,6 @@ public class CalculatorSensorsUnlimited extends CalculatorSensors {
     private DrawerSensor calculatorDensityValues;
     private DrawerSensor drawerInformation;
 
-    private float scaleFactor = 1.0f;
-
     public CalculatorSensorsUnlimited(ITask task) {
         super(task);
 
@@ -51,6 +49,7 @@ public class CalculatorSensorsUnlimited extends CalculatorSensors {
         panelForPlot.set(0, 0, widthPanelForPlot, heightPanelForPlot);
         drawerPlot.setDrawPanel(panelForPlot);
 
+        widthDistributionPanel = (int) (heightPanelForPlot * WIDTH_COEFFICIENT);
         createPanelsForPoints(widthPanelForPlot, heightPanelForPlot);
         createPanelsForValues(widthPanelForPlot, heightPanelForPlot);
 
@@ -115,9 +114,8 @@ public class CalculatorSensorsUnlimited extends CalculatorSensors {
     }
 
     private void createPanelsForPoints(int widthPanelForPlot, int heightPanelForPlot) {
-        final int HEIGHT_PANEL_DISTRIBUTION = 30;
         if (isDistributionPoints) {
-            int bottomPointPanelDistribution = (int)(heightPanelForPlot + HEIGHT_PANEL_DISTRIBUTION * scaleFactor);
+            int bottomPointPanelDistribution = heightPanelForPlot + widthDistributionPanel;
             panelForDistributionPoints.set(0, heightPanelForPlot, widthPanelForPlot, bottomPointPanelDistribution);
             calculatorDistributionPoints.setDrawPanel(panelForDistributionPoints);
 
@@ -155,9 +153,8 @@ public class CalculatorSensorsUnlimited extends CalculatorSensors {
     }
 
     private void createPanelsForValues(int widthPanelForPlot, int heightPanelForPlot) {
-        final int WIDTH_PANEL_DISTRIBUTION = 30;
         if (isDistributionValues) {
-            int rightPointPanelForDistribution = (int)(widthPanelForPlot + WIDTH_PANEL_DISTRIBUTION * scaleFactor);
+            int rightPointPanelForDistribution = widthPanelForPlot + widthDistributionPanel;
             panelForDistributionValue.set(widthPanelForPlot, 0, rightPointPanelForDistribution, heightPanelForPlot);
             calculatorDistributionValues.setDrawPanel(panelForDistributionValue);
 

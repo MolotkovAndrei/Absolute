@@ -17,7 +17,8 @@ public abstract class CalculatorSensors {
     protected int heightWorkSpace;
 
     protected Paint paint = new Paint();
-    protected final int WIDTH_DISTRIBUTION_PANEL = 30;
+    protected int widthDistributionPanel;
+    protected final double WIDTH_COEFFICIENT = 0.08;
 
     public CalculatorSensors(ITask task) {
         boolean[] isCheckedSensors = task.getSettings().getCheckedSensors();

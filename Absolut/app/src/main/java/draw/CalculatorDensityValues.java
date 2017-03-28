@@ -54,7 +54,7 @@ public class CalculatorDensityValues extends DrawerSensor {
         }
         int normalCoordinate;
         for (int i = 0; i < drawPoints.size(); i++) {
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j <= i; j++) {
                 normalCoordinate = drawPoints.get(j).y - drawPanel.top;
                 if (normalCoordinate / stepOfColumn >= NUMBER_OF_COLUMNS) {
                     densityPoints[i][NUMBER_OF_COLUMNS - 1]++;

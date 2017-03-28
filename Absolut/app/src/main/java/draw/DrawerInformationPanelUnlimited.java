@@ -27,4 +27,12 @@ public class DrawerInformationPanelUnlimited extends DrawerInformationPanel {
             bestPoint.y = currentPoint.y;
         }
     }
+
+    @Override
+    protected boolean changeBestPoint(int index) {
+        if (bestPoint.y > currentPoint.y) {
+            setBestPoint(index);
+        }
+        return true;
+    }
 }
