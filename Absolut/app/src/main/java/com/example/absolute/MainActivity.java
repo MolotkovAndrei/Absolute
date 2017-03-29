@@ -167,6 +167,20 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
 
             menu.setGroupVisible(R.id.group_unlimited_algorithms, false);
             menu.setGroupVisible(R.id.group_limited_algorithms, true);
+
+            MenuItem itemIndexAlgorithm = menu.findItem(R.id.indexAlgorithm);
+            MenuItem itemPenaltyAlgorithm = menu.findItem(R.id.penaltyAlgorithm);
+            if (model.getStorageTask(currentTab).getCurrentTask() instanceof IndexTask) {
+                if (itemIndexAlgorithm != null && itemPenaltyAlgorithm != null) {
+                    itemIndexAlgorithm.setVisible(false);
+                    itemPenaltyAlgorithm.setVisible(true);
+                }
+            } else {
+                if (itemIndexAlgorithm != null && itemPenaltyAlgorithm != null) {
+                    menu.findItem(R.id.indexAlgorithm).setVisible(true);
+                    menu.findItem(R.id.penaltyAlgorithm).setVisible(false);
+                }
+            }
         } else {
             menu.setGroupVisible(R.id.group_unlimited_task, true);
             menu.setGroupVisible(R.id.group_limited_task, false);

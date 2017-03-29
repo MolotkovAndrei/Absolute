@@ -48,6 +48,7 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
 
     public DrawerInformationPanel(ITask task, Rect drawPanel) {
         super(task, drawPanel);
+        setContent(task);
     }
 
     @Override
@@ -265,7 +266,10 @@ public abstract class DrawerInformationPanel extends DrawerSensor {
 
     private void calculateAccuracySensor(Canvas canvas) {
         Point point = new Point();
+        System.out.println("bestPoint: " + bestPoint.x);
+        System.out.println("exactValue: " + exactValue.x);
         double x = Math.log10(Math.abs(bestPoint.x - exactValue.x)) + 6;
+        System.out.println("X: " + x);
         double y = Math.log10(Math.abs(bestPoint.y - exactValue.y)) + 6;
 
         point.x = (int)(x * accuracyRect.width() / 5) + accuracyRect.left;

@@ -24,12 +24,12 @@ public class DrawerInformationPanelLimited extends DrawerInformationPanel {
             currentPoint.y = dots.get(0).y;
             currentPoint.index = dots.get(0).index;
             roundNumber(currentPoint, 1000000);
-            bestPoint.x = currentPoint.x;
-            bestPoint.y = currentPoint.y;
+            bestPoint.x = Double.MAX_VALUE; //currentPoint.x;
+            bestPoint.y = Double.MAX_VALUE; //currentPoint.y;
             bestPoint.index = currentPoint.index;
         } else {
-            currentPoint.x = 0.0;
-            currentPoint.y = 0.0;
+            currentPoint.x = Double.MAX_VALUE;//= 0.0;
+            currentPoint.y = Double.MAX_VALUE;//= 0.0;
             bestPoint.x = currentPoint.x;
             bestPoint.y = currentPoint.y;
         }

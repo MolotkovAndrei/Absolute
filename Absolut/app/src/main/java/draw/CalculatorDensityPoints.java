@@ -43,7 +43,7 @@ public class CalculatorDensityPoints extends DrawerSensor {
         }
         super.calculatePointsForDraw();
         int stepOfColumn = drawPanel.width() / NUMBER_OF_COLUMNS;
-        for (int i = 0; i < drawPoints.size(); i++) {
+        for (int i = 0; i < densityPoints.length; i++) {
             for (int j = 0; j < NUMBER_OF_COLUMNS; j++) {
                 densityPoints[i][j] = 0;
             }

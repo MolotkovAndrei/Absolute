@@ -111,7 +111,7 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
         }
         dots = task.getStorage();
         if (dots.size() != isIndex.length) {
-            isIndex = new boolean[dots.size()];
+            isIndex = new boolean[dots.size() + 1];
         }
         for (int i = 0; i < dots.size(); i++) {
             isIndex[i] = false;
