@@ -60,8 +60,9 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
             drawerDensityValues.add(new CalculatorDensityValues(function, dots, new Rect()));
         }
         Rect drawPanelHiderInvalidPoints = new Rect();
-        drawerPlotsLimitedFunctions.add(new DrawerPlot(task.getMinimizedFunction(), drawPanelHiderInvalidPoints));
         mHiderInvalidPoints = new HiderInvalidPoints(drawPanelHiderInvalidPoints, task.getLimitationFunctions());
+        drawerPlotsLimitedFunctions.add(new DrawerPlotIndexFunction(task.getMinimizedFunction(),
+                drawPanelHiderInvalidPoints, mHiderInvalidPoints));
         mDrawerDistributionPoints.add(new CalculatorDistributionPoints(task, new Rect()));
     }
 
@@ -146,7 +147,7 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
         for (DrawerSensor plot : drawerPlotsLimitedFunctions) {
             plot.draw(canvas, index);
         }
-        mHiderInvalidPoints.draw(canvas);
+        //mHiderInvalidPoints.draw(canvas);
 
         if (!isIndex[index] && index < dots.size() - 1) {
             indexesForDraw[dots.get(index).index]++;
@@ -222,8 +223,9 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
         for (int i = 0; i < countLimitedFunctions; i++) {
             drawerPlotsLimitedFunctions.get(i).setContent(task.getLimitationFunctions().get(i));
         }
-        drawerPlotsLimitedFunctions.get(countLimitedFunctions).setContent(task.getMinimizedFunction());
         mHiderInvalidPoints.updateFunctions(task.getLimitationFunctions());
+        drawerPlotsLimitedFunctions.get(countLimitedFunctions).setContent(task.getMinimizedFunction());
+
     }
 
     private void createPanelsForValues(Point leftTopPointPanelForPlot,

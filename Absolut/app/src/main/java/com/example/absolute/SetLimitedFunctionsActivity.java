@@ -22,8 +22,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import draw.DrawerPlot;
+import draw.DrawerPlotIndexFunction;
+import draw.DrawerPlotPenaltyFunction;
 import draw.DrawerSensor;
 import draw.HiderInvalidPoints;
+import draw.HiderInvalidPointsPenaltyFunction;
 import draw.ViewerSetLimitedFunctions;
 import function.AbstractFunction;
 import function.HillFunction;
@@ -47,7 +50,7 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
     private HiderInvalidPoints hiderInvalidPoints;
     private IFunction minimizeFunction;
     private List<IFunction> limitedFunctions = new ArrayList<>();
-    private IFunction penaltyFunction;
+    private PenaltyFunction penaltyFunction;
     private int positionChangeLimitedLevel;
 
     private static final String EXTRA_MINIMIZED_FUNCTION = "com.example.absolute.minimizedFunction";
@@ -67,34 +70,13 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_limited_functions);
 
-        Intent intent = getIntent();
-        minimizeFunction = (IFunction)intent.getSerializableExtra(EXTRA_MINIMIZED_FUNCTION);
-        drawerSensors.add(new DrawerPlot(minimizeFunction, new Rect()));
-        int numberLimitedFunction = (int)intent.getSerializableExtra(EXTRA_NUMBER_LIMITED_FUNCTIONS);
-        for (int i = 0; i < numberLimitedFunction; i++) {
-            limitedFunctions.add((IFunction)intent.getSerializableExtra(EXTRA_LIMITED_FUNCTION + i));
-            drawerSensors.add(new DrawerPlot(limitedFunctions.get(i), new Rect()));
-        }
-        typeLimitedTask = (TypeLimitedTask)intent.getSerializableExtra(EXTRA_TYPE_LIMITED_TASK);
+        getExtraDataFromIntent();
 
-        toolbar = (Toolbar)findViewById(R.id.set_limited_functions_toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setSubtitle(R.string.subTitleToolBarSetLimitedFunctions);
+        setToolBar();
 
-        limitedFunctionsRecyclerView = (RecyclerView)findViewById(R.id.limited_functions_recycler_view);
-        limitedFunctionsRecyclerView.setLayoutManager(new LinearLayoutManager(SetLimitedFunctionsActivity.this));
+        createDrawerPlotWithInvalidPoints();
 
-        Rect hiderRect = new Rect();
-        if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-            drawerSensors.add(new DrawerPlot(minimizeFunction, hiderRect));
-            hiderInvalidPoints = new HiderInvalidPoints(hiderRect, limitedFunctions);
-        } else {
-            penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
-            drawerSensors.add(new DrawerPlot(penaltyFunction, hiderRect));
-        }
-
-        adapter = new LimitedFunctionsAdapter(drawerSensors);
-        limitedFunctionsRecyclerView.setAdapter(adapter);
+        createRecyclerView();
 
         selectButton = (Button) findViewById(R.id.selectButton);
         selectButton.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +122,43 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
         storageTasks.setLimitationFunctions(limitedFunctions);
     }
 
+    private void getExtraDataFromIntent() {
+        Intent intent = getIntent();
+        minimizeFunction = (IFunction)intent.getSerializableExtra(EXTRA_MINIMIZED_FUNCTION);
+        drawerSensors.add(new DrawerPlot(minimizeFunction, new Rect()));
+        int numberLimitedFunction = (int)intent.getSerializableExtra(EXTRA_NUMBER_LIMITED_FUNCTIONS);
+        for (int i = 0; i < numberLimitedFunction; i++) {
+            limitedFunctions.add((IFunction)intent.getSerializableExtra(EXTRA_LIMITED_FUNCTION + i));
+            drawerSensors.add(new DrawerPlot(limitedFunctions.get(i), new Rect()));
+        }
+        typeLimitedTask = (TypeLimitedTask)intent.getSerializableExtra(EXTRA_TYPE_LIMITED_TASK);
+    }
+
+    private void setToolBar() {
+        toolbar = (Toolbar)findViewById(R.id.set_limited_functions_toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setSubtitle(R.string.subTitleToolBarSetLimitedFunctions);
+    }
+
+    private void createRecyclerView() {
+        limitedFunctionsRecyclerView = (RecyclerView)findViewById(R.id.limited_functions_recycler_view);
+        limitedFunctionsRecyclerView.setLayoutManager(new LinearLayoutManager(SetLimitedFunctionsActivity.this));
+        adapter = new LimitedFunctionsAdapter(drawerSensors);
+        limitedFunctionsRecyclerView.setAdapter(adapter);
+    }
+
+    private void createDrawerPlotWithInvalidPoints() {
+        Rect hiderRect = new Rect();
+        if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
+            hiderInvalidPoints = new HiderInvalidPoints(hiderRect, limitedFunctions);
+            drawerSensors.add(new DrawerPlotIndexFunction(minimizeFunction, hiderRect, hiderInvalidPoints));
+        } else {
+            penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
+            hiderInvalidPoints = new HiderInvalidPointsPenaltyFunction(hiderRect, limitedFunctions);
+            drawerSensors.add(new DrawerPlotPenaltyFunction(penaltyFunction, hiderRect, hiderInvalidPoints));
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_set_limited_functions, menu);
@@ -150,7 +169,6 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         final int MAX_NUMBER_LIMITED_FUNCTIONS = 3;
         MenuItem menuItemAdd = menu.findItem(R.id.menu_item_add_limited_function);
-        //MenuItem menuItemDelete = menu.findItem(R.id.menu_item_delete_limited_function);
         if (limitedFunctions.size() == MAX_NUMBER_LIMITED_FUNCTIONS) {
             menuItemAdd.setVisible(false);
         }
@@ -167,21 +185,15 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
                 DrawerSensor drawerSensor = drawerSensors.get(lastElement);
                 drawerSensors.set(lastElement, new DrawerPlot(function, drawerSensor.getDrawPanel()));
                 drawerSensors.add(drawerSensor);
-                if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-                    hiderInvalidPoints.updateFunctions(limitedFunctions);
-                } else {
+                hiderInvalidPoints.updateFunctions(limitedFunctions);
+
+                if (typeLimitedTask == TypeLimitedTask.PENALTY_TASK) {
                     penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
                     drawerSensors.get(lastElement + 1).setContent(penaltyFunction);
                 }
                 invalidateOptionsMenu();
                 adapter.notifyDataSetChanged();
                 break;
-            /*case R.id.menu_item_delete_limited_function:
-                drawerSensors.remove(lastElement - 1);
-                limitedFunctions.remove(lastElement - 2);
-                invalidateOptionsMenu();
-                adapter.notifyDataSetChanged();
-                break;*/
         }
         return super.onOptionsItemSelected(item);
     }
@@ -198,9 +210,9 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
                     IFunction function = SetLimitedLevelActivity.getFunction(data);
                     limitedFunctions.set(positionChangeLimitedLevel, function);
                     drawerSensors.get(positionChangeLimitedLevel + 1).setContent(function);
-                    if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-                        hiderInvalidPoints.updateFunctions(limitedFunctions);
-                    } else {
+                    hiderInvalidPoints.updateFunctions(limitedFunctions);
+
+                    if (typeLimitedTask == TypeLimitedTask.PENALTY_TASK) {
                         penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
                         drawerSensors.get(limitedFunctions.size() + 1).setContent(penaltyFunction);
                     }
@@ -247,18 +259,14 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
                     } else {
                         minimizeFunction = function;
                         drawerSensors.get(0).setContent(function);
-                        if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-                            drawerSensors.get(limitedFunctions.size() + 1).setContent(function);
-                        }
                     }
-                    //drawerSensors.get(position).setContent(function);
                     if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-                        hiderInvalidPoints.updateFunctions(limitedFunctions);
+                        drawerSensors.get(limitedFunctions.size() + 1).setContent(function);
                     } else {
                         penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
                         drawerSensors.get(limitedFunctions.size() + 1).setContent(penaltyFunction);
                     }
-                    //colors.set(position, Color.BLACK);
+                    hiderInvalidPoints.updateFunctions(limitedFunctions);
 
                     viewerSetLimitedFunctions.invalidate();
                     adapter.notifyDataSetChanged();
@@ -276,9 +284,9 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
                         drawerSensors.remove(position);
                         limitedFunctions.remove(position - 1);
                         invalidateOptionsMenu();
-                        if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-                            hiderInvalidPoints.updateFunctions(limitedFunctions);
-                        } else {
+                        hiderInvalidPoints.updateFunctions(limitedFunctions);
+
+                        if (typeLimitedTask == TypeLimitedTask.PENALTY_TASK) {
                             penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
                             drawerSensors.get(limitedFunctions.size() + 1).setContent(penaltyFunction);
                         }
@@ -321,17 +329,21 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
         public void onBindViewHolder(LimitedFunctionsHolder holder, int position) {
             DrawerSensor drawerSensor = drawerSensors.get(position);
             holder.viewerSetLimitedFunctions.setDrawerSensor(drawerSensor);
-            holder.viewerSetLimitedFunctions.setPos(position);
             holder.position = position;
             if (position == limitedFunctions.size() + 1) {
-                holder.viewerSetLimitedFunctions.setHiderInvalidPoints(hiderInvalidPoints);
-                holder.refreshButton.setEnabled(false);
-                holder.removeLimitationButton.setEnabled(false);
+                holder.refreshButton.setVisibility(View.INVISIBLE);
+                holder.removeLimitationButton.setVisibility(View.INVISIBLE);
+                holder.limitedLevelButton.setVisibility(View.INVISIBLE);
                 holder.nameFunction.setText(RESULT_FUNCTION);
             } else {
-                holder.viewerSetLimitedFunctions.setHiderInvalidPoints(null);
-                holder.refreshButton.setEnabled(true);
-                holder.removeLimitationButton.setEnabled(true);
+                holder.refreshButton.setVisibility(View.VISIBLE);
+                if (position > 0) {
+                    holder.removeLimitationButton.setVisibility(View.VISIBLE);
+                    holder.limitedLevelButton.setVisibility(View.VISIBLE);
+                } else {
+                    holder.removeLimitationButton.setVisibility(View.INVISIBLE);
+                    holder.limitedLevelButton.setVisibility(View.INVISIBLE);
+                }
                 holder.nameFunction.setText(nameFunctions[position]);
             }
         }

@@ -77,7 +77,7 @@ public class PenaltyTask extends TaskWithLimitations {
             value.x = dot.x;
             value.y = mLimitationFunctions.get(i).getValue(value.x);
             testPointsForFunctions.get(i + 1).add(value);
-            double maxValue = max(value.y, limitationLevel);
+            double maxValue = max(value.y - limitationLevel, 0.0);
             penalty += maxValue * maxValue;
         }
         dot.y  += penalty;

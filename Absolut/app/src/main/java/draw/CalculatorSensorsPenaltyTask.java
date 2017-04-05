@@ -25,6 +25,7 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
     private DrawerSensor drawerDynamicsPoints;
     private List<DrawerSensor> drawersDynamicsValues;
     private DrawerSensor drawerInformationPanel;
+    private HiderInvalidPoints hiderInvalidPoints;
 
     private List<Dot> dots;
     private int heightPanelForPlot;
@@ -51,8 +52,11 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
             drawersDynamicsValues.add(new CalculatorDynamicsValues(function, dots, new Rect()));
             drawersDensityValues.add(new CalculatorDensityValues(function, dots, new Rect()));
         }
+        Rect drawPanelHiderInvalidPoints = new Rect();
         penaltyFunction = new PenaltyFunction(task.getMinimizedFunction(), task.getLimitationFunctions());
-        drawerPlotsLimitedFunctions.add(new DrawerPlot(penaltyFunction, new Rect()));
+        hiderInvalidPoints = new HiderInvalidPointsPenaltyFunction(drawPanelHiderInvalidPoints, task.getLimitationFunctions());
+        drawerPlotsLimitedFunctions.add(new DrawerPlotPenaltyFunction(penaltyFunction, drawPanelHiderInvalidPoints, hiderInvalidPoints));
+
         drawerDistributionPoints = new CalculatorDistributionPoints(task, new Rect());
         drawerDensityPoints = new CalculatorDensityPoints(task, new Rect());
         drawerDynamicsPoints = new CalculatorDynamicsPoints(task, new Rect());
@@ -84,6 +88,8 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
                createPanelsForValues(leftTop, rightBottom, i + 1);
            }
         }
+        hiderInvalidPoints.calculateHideRectangles();
+
         createPanelsForPoints(leftTop, rightBottom);
         leftTop.x = drawerDistributionPoints.getDrawPanel().right;
         leftTop.y = drawerDistributionPoints.getDrawPanel().top;
@@ -100,7 +106,9 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
             drawerPlotsLimitedFunctions.get(i).setContent(task.getLimitationFunctions().get(i));
         }
         penaltyFunction = new PenaltyFunction(task.getMinimizedFunction(), task.getLimitationFunctions());
+        hiderInvalidPoints.updateFunctions(task.getLimitationFunctions());
         drawerPlotsLimitedFunctions.get(countLimitedFunctions).setContent(penaltyFunction);
+
 
         dots = task.getStorage();
         System.out.println("size dots: " + dots.size());
@@ -151,9 +159,11 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
     @Override
     public void drawSensors(Canvas canvas, int index) {
         drawerPlotMinimizedFunction.draw(canvas, index);
+
         for (DrawerSensor plot : drawerPlotsLimitedFunctions) {
             plot.draw(canvas, index);
         }
+        //hiderInvalidPoints.draw(canvas);
 
         if (isDistributionPoints) {
             drawerDistributionPoints.draw(canvas, index);

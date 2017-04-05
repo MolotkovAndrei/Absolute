@@ -18,11 +18,15 @@ public class PenaltyFunction extends AbstractFunction {
 
     @Override
     public double getValue(double x) {
+        return minimizedFunction.getValue(x) + getPenalty(x);
+    }
+
+    public double getPenalty(double x) {
         double penalty = 0.0;
         for (IFunction function : limitedFunctions) {
-            double maxValue = max(function.getValue(x), function.getLimitationLevel());
+            double maxValue = max(function.getValue(x) - function.getLimitationLevel(), 0.0);
             penalty += maxValue * maxValue;
         }
-        return minimizedFunction.getValue(x) + penalty;
+        return penalty;
     }
 }

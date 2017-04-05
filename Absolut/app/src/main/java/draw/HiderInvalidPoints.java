@@ -16,8 +16,8 @@ import task.ITask;
 public class HiderInvalidPoints {
     private List<Rect> mRects = new ArrayList<>();
     private Rect drawPanel = new Rect();
-    private List<IFunction> limitedFunctions = new ArrayList<>();
-    private IFunction minimizedFunction;
+    protected List<IFunction> limitedFunctions = new ArrayList<>();
+    //private IFunction minimizedFunction;
     private Paint paint = new Paint();
 
     public HiderInvalidPoints(Rect drawPanel, List<IFunction> limitedFunctions) {
@@ -64,13 +64,9 @@ public class HiderInvalidPoints {
         for (Rect rect : mRects) {
             canvas.drawRect(rect, paint);
         }
-        /*paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(4);
-        canvas.drawRect(drawPanel, paint);*/
     }
 
-    private boolean isValidPoint(double x) {
+    protected boolean isValidPoint(double x) {
         double valueFunction;
         double limitedLevel;
         int i;
