@@ -18,7 +18,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import draw.DrawerPlot;
@@ -26,9 +25,9 @@ import draw.DrawerPlotIndexFunction;
 import draw.DrawerPlotPenaltyFunction;
 import draw.DrawerSensor;
 import draw.HiderInvalidPoints;
-import draw.HiderInvalidPointsPenaltyFunction;
+import draw.HiderInvalidPointsIndexTask;
+import draw.HiderInvalidPointsPenaltyTask;
 import draw.ViewerSetLimitedFunctions;
-import function.AbstractFunction;
 import function.HillFunction;
 import function.IFunction;
 import function.PenaltyFunction;
@@ -50,7 +49,7 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
     private HiderInvalidPoints hiderInvalidPoints;
     private IFunction minimizeFunction;
     private List<IFunction> limitedFunctions = new ArrayList<>();
-    private PenaltyFunction penaltyFunction;
+    private IFunction penaltyFunction;
     private int positionChangeLimitedLevel;
 
     private static final String EXTRA_MINIMIZED_FUNCTION = "com.example.absolute.minimizedFunction";
@@ -150,11 +149,11 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
     private void createDrawerPlotWithInvalidPoints() {
         Rect hiderRect = new Rect();
         if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-            hiderInvalidPoints = new HiderInvalidPoints(hiderRect, limitedFunctions);
+            hiderInvalidPoints = new HiderInvalidPointsIndexTask(hiderRect, limitedFunctions);
             drawerSensors.add(new DrawerPlotIndexFunction(minimizeFunction, hiderRect, hiderInvalidPoints));
         } else {
             penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
-            hiderInvalidPoints = new HiderInvalidPointsPenaltyFunction(hiderRect, limitedFunctions);
+            hiderInvalidPoints = new HiderInvalidPointsPenaltyTask(hiderRect, limitedFunctions);
             drawerSensors.add(new DrawerPlotPenaltyFunction(penaltyFunction, hiderRect, hiderInvalidPoints));
         }
     }

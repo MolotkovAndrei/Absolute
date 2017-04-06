@@ -8,8 +8,8 @@ import function.IFunction;
 
 import static java.lang.Math.max;
 
-public class HiderInvalidPointsPenaltyFunction extends HiderInvalidPoints {
-    public HiderInvalidPointsPenaltyFunction(Rect drawPanel, List<IFunction> limitedFunctions) {
+public class HiderInvalidPointsPenaltyTask extends HiderInvalidPoints {
+    public HiderInvalidPointsPenaltyTask(Rect drawPanel, List<IFunction> limitedFunctions) {
         super(drawPanel, limitedFunctions);
     }
 

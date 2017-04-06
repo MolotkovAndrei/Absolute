@@ -54,7 +54,7 @@ public class CalculatorSensorsPenaltyTask extends CalculatorSensors {
         }
         Rect drawPanelHiderInvalidPoints = new Rect();
         penaltyFunction = new PenaltyFunction(task.getMinimizedFunction(), task.getLimitationFunctions());
-        hiderInvalidPoints = new HiderInvalidPointsPenaltyFunction(drawPanelHiderInvalidPoints, task.getLimitationFunctions());
+        hiderInvalidPoints = new HiderInvalidPointsPenaltyTask(drawPanelHiderInvalidPoints, task.getLimitationFunctions());
         drawerPlotsLimitedFunctions.add(new DrawerPlotPenaltyFunction(penaltyFunction, drawPanelHiderInvalidPoints, hiderInvalidPoints));
 
         drawerDistributionPoints = new CalculatorDistributionPoints(task, new Rect());

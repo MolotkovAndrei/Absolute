@@ -34,11 +34,13 @@
         <activity android:name=".ExperimentsJournalActivity"/>
         <activity android:name=".OperationalCharacteristicsActivity"/>
         <activity android:name=".SearchActivity"/>
-        <activity android:name=".RunSeriesActivity"/>
+        <activity android:name=".SeriesUnlimitedTaskActivity"/>
         <activity android:name=".DisplayOptionsActivity"/>
         <activity android:name=".SetLimitedFunctionsActivity">
         </activity>
         <activity android:name=".SetLimitedLevelActivity">
+        </activity>
+        <activity android:name=".SeriesLimitedTaskActivity">
         </activity>
     </application>
 

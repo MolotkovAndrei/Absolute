@@ -60,7 +60,7 @@ public class CalculatorSensorsIndexTask extends CalculatorSensors {
             drawerDensityValues.add(new CalculatorDensityValues(function, dots, new Rect()));
         }
         Rect drawPanelHiderInvalidPoints = new Rect();
-        mHiderInvalidPoints = new HiderInvalidPoints(drawPanelHiderInvalidPoints, task.getLimitationFunctions());
+        mHiderInvalidPoints = new HiderInvalidPointsIndexTask(drawPanelHiderInvalidPoints, task.getLimitationFunctions());
         drawerPlotsLimitedFunctions.add(new DrawerPlotIndexFunction(task.getMinimizedFunction(),
                 drawPanelHiderInvalidPoints, mHiderInvalidPoints));
         mDrawerDistributionPoints.add(new CalculatorDistributionPoints(task, new Rect()));

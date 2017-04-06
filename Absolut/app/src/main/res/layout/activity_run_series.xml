@@ -40,12 +40,12 @@
             android:layout_weight="1" />
 
         <EditText
+            android:id="@+id/countFunctionsET"
             android:layout_width="135dp"
             android:layout_height="wrap_content"
-            android:inputType="number"
-            android:text=""
             android:ems="10"
-            android:id="@+id/countFunctionsET" />
+            android:inputType="number"
+            android:text="5"/>
 
         <TextView
             android:text="@string/ofFunctions"

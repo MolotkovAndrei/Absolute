@@ -84,6 +84,8 @@
     <string name="titleSettingDegreeLocally">Степень локальности:</string>
     <string name="titleSettingPortionGlobalIterations">Доля глобальных итераций:</string>
     <string name="maxNumberHansenFunctions">Число функций не больше 20</string>
+    <string name="numberFunctionsInSeries">Число функций должно быть не больше 50</string>
+    <string name="inputNumberFunctionsInSeries">Введите число функций в серии</string>
     <string name="subtitleOperationalCharacteristicsActivity">Операционные характеристики</string>
     <string name="titleRadioButtonUnlimitedTask">Задача без ограничений</string>
     <string name="titleRadioButtonLimitedTask">Задача с ограничениями</string>
@@ -112,10 +114,14 @@
         <item>Очистить</item>
     </string-array>
 
-    <string-array name="seriesActivityItems">
+    <string-array name="functionsUnlimitedTaskSeries">
         <item>Функции Шеккеля и Хилла - Гибсона</item>
         <item>Функции Хилла - Гибсона</item>
         <item>Функции Шеккеля</item>
         <item>Функции Хансена</item>
+    </string-array>
+
+    <string-array name="functionsLimitedTaskSeries">
+        <item>Функции Хилла - Гибсона</item>
     </string-array>
 </resources>

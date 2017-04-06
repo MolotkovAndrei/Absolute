@@ -19,6 +19,15 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost;
 
+import com.example.absolute.ExperimentsSeries.CreatorHansenFunctions;
+import com.example.absolute.ExperimentsSeries.CreatorHillAndShekelFunctions;
+import com.example.absolute.ExperimentsSeries.CreatorHillFunctions;
+import com.example.absolute.ExperimentsSeries.CreatorSeries;
+import com.example.absolute.ExperimentsSeries.CreatorSeriesIndexTask;
+import com.example.absolute.ExperimentsSeries.CreatorSeriesPenaltyTask;
+import com.example.absolute.ExperimentsSeries.CreatorSeriesUnlimitedTasks;
+import com.example.absolute.ExperimentsSeries.CreatorShekelFunctions;
+import com.example.absolute.ExperimentsSeries.ICreatorFunctions;
 import com.example.absolute.dialog.CloseTabFragment;
 import com.example.absolute.dialog.DialogListener;
 import com.example.absolute.dialog.NameNewTabFragment;
@@ -215,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
                 startActivityForResult(intent, REQUEST_CODE_DISPLAY_OPTIONS);
                 break;
             case R.id.sub_item_execute_serial:
-                intent = RunSeriesActivity.newIntent(MainActivity.this);
+                intent = RunSeriesActivity.newIntent(MainActivity.this, storageTasks);
                 startActivityForResult(intent, REQUEST_CODE_RUN_SERIES);
                 break;
             case R.id.sub_item_standard_functions:
@@ -350,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
 
     @Override
     public void createNewTab(boolean isUnlimitedTask, String nameNewTab) {
-        final double EPS = 0.01;
+        final double EPS = 0.001;
         final int NUMBER_ITERATIONS = 200;
         final double PARAMETER = 2.0;
 
@@ -418,62 +427,38 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
     }
 
     private void createSerialTasks(StorageTasks storageTasks, RunSeriesActivity.TaskType taskType) {
-        Settings settings = storageTasks.getSettings();
-        storageTasks.clearStorage();
+        ITask task = storageTasks.getCurrentTask();
+        CreatorSeries creatorSeries;
+        if (task instanceof Task) {
+            creatorSeries = new CreatorSeriesUnlimitedTasks(taskType.getCountFunctions());
+        } else if (task instanceof IndexTask) {
+            creatorSeries = new CreatorSeriesIndexTask(taskType.getCountFunctions());
+        } else {
+            creatorSeries = new CreatorSeriesPenaltyTask(taskType.getCountFunctions());
+        }
+
+        ICreatorFunctions creatorFunctions;
         switch (taskType) {
             case SHEKEL_AND_HILL:
-                Random random = new Random();
-                for (int i = 0; i < taskType.getCountFunctions(); i++) {
-                    if (random.nextInt(1) == 0) {
-                        ITask task = new Task(settings);
-                        task.setMinimizedFunction(new ShekelFunction());
-                        storageTasks.addTask(task);
-                    } else {
-                        ITask task = new Task(settings);
-                        task.setMinimizedFunction(new HillFunction());
-                        storageTasks.addTask(task);
-                    }
-                }
+                creatorFunctions = new CreatorHillAndShekelFunctions();
                 break;
             case HILL:
-                for (int i = 0; i < taskType.getCountFunctions(); i++) {
-                    ITask task = new Task(settings);
-                    task.setMinimizedFunction(new HillFunction());
-                    storageTasks.addTask(task);
-                }
+                creatorFunctions = new CreatorHillFunctions();
                 break;
             case SHEKEL:
-                for (int i = 0; i < taskType.getCountFunctions(); i++) {
-                    ITask task = new Task(settings);
-                    task.setMinimizedFunction(new ShekelFunction());
-                    storageTasks.addTask(task);
-                }
+                creatorFunctions = new CreatorShekelFunctions();
                 break;
             case HANSEN:
-                for (int i = 0; i < taskType.getCountFunctions(); i++) {
-                    ITask task = new Task(settings);
-                    task.setMinimizedFunction(getStandardFunctionList().get(i));
-                    storageTasks.addTask(task);
-                }
+                creatorFunctions = new CreatorHansenFunctions();
                 break;
+            default:
+                creatorFunctions = new CreatorHillFunctions();
         }
+
+        creatorSeries.create(storageTasks, creatorFunctions);
     }
 
-    private ArrayList<IFunction> getStandardFunctionList() {
-        ArrayList<IFunction> list = new ArrayList<>();
-        list.add(new F1()); list.add(new F2());
-        list.add(new F3()); list.add(new F4());
-        list.add(new F5()); list.add(new F6());
-        list.add(new F7()); list.add(new F8());
-        list.add(new F9()); list.add(new F10());
-        list.add(new F11());list.add(new F12());
-        list.add(new F13());list.add(new F14());
-        list.add(new F15());list.add(new F16());
-        list.add(new F17());list.add(new F18());
-        list.add(new F19());list.add(new F20());
 
-        return list;
-    }
 
     private void createRandomFunction(StorageTasks storageTasks) {
         IFunction function = storageTasks.getMinimizedFunction();

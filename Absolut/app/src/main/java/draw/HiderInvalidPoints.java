@@ -13,17 +13,15 @@ import java.util.List;
 import function.IFunction;
 import task.ITask;
 
-public class HiderInvalidPoints {
+public abstract class HiderInvalidPoints {
     private List<Rect> mRects = new ArrayList<>();
     private Rect drawPanel = new Rect();
     protected List<IFunction> limitedFunctions = new ArrayList<>();
-    //private IFunction minimizedFunction;
     private Paint paint = new Paint();
 
     public HiderInvalidPoints(Rect drawPanel, List<IFunction> limitedFunctions) {
         this.drawPanel = drawPanel;
         this.limitedFunctions = limitedFunctions;
-        //minimizedFunction = task.getMinimizedFunction();
     }
 
     public void updateFunctions(List<IFunction> limitedFunctions) {
@@ -66,25 +64,9 @@ public class HiderInvalidPoints {
         }
     }
 
-    protected boolean isValidPoint(double x) {
-        double valueFunction;
-        double limitedLevel;
-        int i;
-        for (i = 0; i < limitedFunctions.size(); i++) {
-            valueFunction = limitedFunctions.get(i).getValue(x);
-            limitedLevel = limitedFunctions.get(i).getLimitationLevel();
-            if (valueFunction > limitedLevel) {
-                return false;
-            }
-        }
-        return true;
-    }
+    protected abstract boolean isValidPoint(double x);
 
-    protected double convertPixToCoord(final int numberPixels, final double lengthRange, final int pix) {
+    private double convertPixToCoord(final int numberPixels, final double lengthRange, final int pix) {
         return pix * lengthRange / numberPixels;
-    }
-
-    protected int convertCoordToPix(final int numberPixels, final double lengthRange, final double coord) {
-        return (int)(coord * numberPixels / lengthRange);
     }
 }

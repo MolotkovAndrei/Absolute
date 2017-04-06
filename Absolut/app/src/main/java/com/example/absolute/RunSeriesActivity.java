@@ -6,18 +6,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
-public class RunSeriesActivity extends AppCompatActivity implements View.OnClickListener {
-    private ListView lvTaskType;
-    private Button select, cancel;
-    private EditText countFunctionsET;
-    private Toolbar toolbar;
-    private TaskType taskType;
+import task.ITask;
+import task.StorageTasks;
+import task.TaskWithLimitations;
+
+public abstract class RunSeriesActivity extends AppCompatActivity implements View.OnClickListener {
+    protected ListView lvTaskType;
+    protected Button select, cancel;
+    protected EditText countFunctionsET;
+    protected Toolbar toolbar;
+    protected TaskType taskType;
+    private final int MAX_NUMBER_FUNCTIONS_IN_SERIES = 50;
+    private final int MIN_NUMBER_FUNCTIONS_IN_SERIES = 1;
+    protected final int START_CHECKED_POSITION_LIST_VIEW = 0;
     private static final String EXTRA_TASK_TYPE = "com.example.absolute.taskType";
 
     public enum TaskType {
@@ -41,8 +46,13 @@ public class RunSeriesActivity extends AppCompatActivity implements View.OnClick
         private int countFunctions;
     }
 
-    public static Intent newIntent(Context packageContext) {
-        return new Intent(packageContext, RunSeriesActivity.class);
+    public static Intent newIntent(Context packageContext, StorageTasks storageTasks) {
+        ITask task = storageTasks.getCurrentTask();
+        if (task instanceof TaskWithLimitations) {
+            return new Intent(packageContext, SeriesLimitedTaskActivity.class);
+        } else {
+            return new Intent(packageContext, SeriesUnlimitedTaskActivity.class);
+        }
     }
 
     public static TaskType getTaskType(Intent data) {
@@ -58,51 +68,19 @@ public class RunSeriesActivity extends AppCompatActivity implements View.OnClick
         toolbar.setSubtitle(R.string.subTitleToolBarRunSeries);
         setSupportActionBar(toolbar);
 
-        lvTaskType = (ListView)findViewById(R.id.lvTaskType);
+        lvTaskType = (ListView) findViewById(R.id.lvTaskType);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.seriesActivityItems,
-                android.R.layout.simple_list_item_single_choice);
-
-        lvTaskType.setAdapter(adapter);
-        lvTaskType.setItemChecked(0, true);
-
-        select = (Button)findViewById(R.id.select);
+        select = (Button) findViewById(R.id.select);
         select.setOnClickListener(this);
 
-        cancel = (Button)findViewById(R.id.cancel);
+        cancel = (Button) findViewById(R.id.cancel);
         cancel.setOnClickListener(this);
 
-        countFunctionsET = (EditText)findViewById(R.id.countFunctionsET);
+        countFunctionsET = (EditText) findViewById(R.id.countFunctionsET);
     }
 
     @Override
     public void onClick(View v) {
-        int countFunctions = Integer.parseInt(countFunctionsET.getText().toString());
-        if (countFunctions < 1) {
-            return;
-        }
-        switch (lvTaskType.getCheckedItemPosition()) {
-            case 0:
-                taskType = TaskType.SHEKEL_AND_HILL;
-                taskType.setCountFunctions(countFunctions);
-                break;
-            case 1:
-                taskType = TaskType.HILL;
-                taskType.setCountFunctions(countFunctions);
-                break;
-            case 2:
-                taskType = TaskType.SHEKEL;
-                taskType.setCountFunctions(countFunctions);
-                break;
-            case 3:
-                taskType = TaskType.HANSEN;
-                if (countFunctions > 20) {
-                    Toast.makeText(this, getString(R.string.maxNumberHansenFunctions), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                taskType.setCountFunctions(countFunctions);
-                break;
-        }
         switch (v.getId()) {
             case R.id.select:
                 sendIntent();
@@ -113,10 +91,28 @@ public class RunSeriesActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void sendIntent() {
+    protected void sendIntent() {
+        if (!isCorrectValuesForSeries()) {
+            return;
+        }
         Intent intent = new Intent();
         intent.putExtra(EXTRA_TASK_TYPE, taskType);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    protected abstract boolean isCorrectValuesForSeries();
+
+    protected int getCountFunctions() {
+        int countFunctions;
+        try {
+            countFunctions = Integer.parseInt(countFunctionsET.getText().toString());
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException();
+        }
+        if (countFunctions < MIN_NUMBER_FUNCTIONS_IN_SERIES || countFunctions > MAX_NUMBER_FUNCTIONS_IN_SERIES) {
+            throw new IllegalArgumentException();
+        }
+        return countFunctions;
     }
 }
