@@ -7,6 +7,7 @@ import com.example.absolute.DisplayOptionsListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import algorithm.CreatorAlgorithm;
 import algorithm.withoutLimitation.BAGS;
 import algorithm.withoutLimitation.BAGS_InsideInterval;
 import algorithm.withoutLimitation.BAGS_WithLocalSettings;
@@ -26,14 +27,99 @@ public class StorageTasks {
     private List<ITask> taskList = new ArrayList<>();
     private String name = "";
     private ITask currentTask;
-    private IAlgorithm algorithm;
+    private IAlgorithm currentAlgorithm;
     private DisplayOptions displayOptions;
 
     public StorageTasks(Context context, final ITask task) {
         taskList.add(task);
-        algorithm = task.getAlgorithm();
+        currentAlgorithm = task.getAlgorithm();
         currentTask = task;
         displayOptions = new DisplayOptions(context);
+    }
+
+    public void setAlgorithm(final IAlgorithm algorithm) {
+        currentAlgorithm = algorithm;
+        for (ITask task : taskList) {
+            task.setAlgorithm(CreatorAlgorithm.create(currentAlgorithm.getName(), currentAlgorithm.getSettings()));
+        }
+        //currentTask.setAlgorithm(algorithm);
+    }
+
+    public void setSettings(Settings settings) {
+        currentAlgorithm.setSettings(settings);
+        for (ITask task : taskList) {
+            task.setSettings(settings);
+        }
+    }
+
+    public List<IFunction> getCurrentLimitationFunctions() {
+        if (currentTask != null) {
+            return currentTask.getLimitationFunctions();
+        }
+        return null;
+    }
+
+    public void setLimitationFunctions(List<IFunction> functions) {
+        if (currentTask != null) {
+            currentTask.setLimitationFunctions(functions);
+        }
+    }
+
+    public IFunction getMinimizedFunction() {
+        if (currentTask != null) {
+            return currentTask.getMinimizedFunction();
+        }
+        return null;
+    }
+
+    public void setMinimizedFunction(IFunction minimizedFunction) {
+        if (currentTask != null) {
+            currentTask.setMinimizedFunction(minimizedFunction);
+        }
+    }
+
+
+    public void addTask(final ITask task) {
+        taskList.add(task);
+        currentTask = task;
+    }
+
+    public void clearStorage() {
+        taskList.clear();
+    }
+
+    public List<ITask> getTaskList() {
+        return taskList;
+    }
+
+    public void executeTasks() {
+        for (ITask task : taskList) {
+            task.run();
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public ITask getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public IAlgorithm getAlgorithm() {
+        return currentAlgorithm;
+    }
+
+    public String getNameAlgorithm() {
+        return currentAlgorithm.getName();
+    }
+
+    public Settings getSettings() {
+        return currentAlgorithm.getSettings();
     }
 
     public DisplayOptions getDisplayOptions() {
@@ -96,82 +182,7 @@ public class StorageTasks {
         displayOptions.setCloseMenuBetweenSteps(canCloseMenuBetweenSteps);
     }
 
-    public void setAlgorithm(final IAlgorithm algorithm) {
-        this.algorithm = algorithm;
-        currentTask.setAlgorithm(algorithm);
-    }
-
-    public IAlgorithm getAlgorithm() {
-        return algorithm;
-    }
-
-    public Settings getSettings() {
-        return algorithm.getSettings();
-    }
-
-    public List<IFunction> getCurrentLimitationFunctions() {
-        if (currentTask != null) {
-            return currentTask.getLimitationFunctions();
-        }
-        return null;
-    }
-
-    public void setLimitationFunctions(List<IFunction> functions) {
-        if (currentTask != null) {
-            currentTask.setLimitationFunctions(functions);
-        }
-    }
-
-    public IFunction getMinimizedFunction() {
-        if (currentTask != null) {
-            return currentTask.getMinimizedFunction();
-        }
-        return null;
-    }
-
-    public void setMinimizedFunction(IFunction minimizedFunction) {
-        if (currentTask != null) {
-            currentTask.setMinimizedFunction(minimizedFunction);
-        }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public ITask getCurrentTask() {
-        return currentTask;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public void addTask(final ITask task) {
-        if (algorithm != null) {
-            task.setAlgorithm(createAlgorithmForTask());
-        } else {
-            algorithm = task.getAlgorithm();
-        }
-        taskList.add(task);
-        currentTask = task;
-    }
-
-    public void clearStorage() {
-        taskList.clear();
-    }
-
-    public List<ITask> getTaskList() {
-        return taskList;
-    }
-
-    public void executeTasks() {
-        for (ITask task : taskList) {
-            task.run();
-        }
-    }
-
-    private IAlgorithm createAlgorithmForTask() {
+    /*private IAlgorithm createAlgorithmForTask() {
         IAlgorithm currentAlg;
         switch (algorithm.toString()) {
             case "SequentalScan":
@@ -209,5 +220,5 @@ public class StorageTasks {
                 break;
         }
         return  currentAlg;
-    }
+    }*/
 }

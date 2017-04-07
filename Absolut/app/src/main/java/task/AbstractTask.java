@@ -54,6 +54,11 @@ public abstract class AbstractTask implements ITask {
     }
 
     @Override
+    public  void setSettings(Settings settings) {
+        mAlgorithm.setSettings(settings);
+    }
+
+    @Override
     public IAlgorithm getAlgorithm() {
         return mAlgorithm;
     }

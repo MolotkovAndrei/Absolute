@@ -450,7 +450,7 @@ public class SettingsAlgorithmActivity extends AppCompatActivity {
                 algorithm.setSettings(settings);
 
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_SETTINGS_ALGORITHM, algorithm);
+                intent.putExtra(EXTRA_SETTINGS_ALGORITHM, settings);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -463,12 +463,12 @@ public class SettingsAlgorithmActivity extends AppCompatActivity {
         return intent;
     }
 
-    public static IAlgorithm getAlgorithm(Intent result) {
-        return (IAlgorithm)result.getSerializableExtra(EXTRA_SETTINGS_ALGORITHM);
+    public static Settings getSettings(Intent result) {
+        return (Settings) result.getSerializableExtra(EXTRA_SETTINGS_ALGORITHM);
     }
 
     private void setAlgorithmType() {
-        switch (algorithm.toString()) {
+        switch (algorithm.getName()) {
             case "SequentalScan":
                 algorithmType = AlgorithmType.SEQUENTAL_SCAN;
                 break;

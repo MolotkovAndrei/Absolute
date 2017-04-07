@@ -58,7 +58,7 @@ public abstract class Algorithm implements IAlgorithm {
     }
 
     @Override
-    public String toString() {
+    public String getName() {
         return name;
     }
 

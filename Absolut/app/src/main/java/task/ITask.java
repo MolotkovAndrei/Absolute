@@ -12,6 +12,7 @@ public interface ITask extends Serializable {
     void setLimitationFunctions(final List<IFunction> functions);
     void setMinimizedFunction(IFunction function);
     void setAlgorithm(final IAlgorithm algorithm);
+    void setSettings(Settings settings);
     void setName(final String name);
 
     List<IFunction> getLimitationFunctions();

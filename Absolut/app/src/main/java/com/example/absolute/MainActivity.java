@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
                     model.setStorageTask(currentTab, storageTasks);
                     break;
                 case REQUEST_CODE_SETTINGS_ALGORITHM:
-                    storageTasks.setAlgorithm(SettingsAlgorithmActivity.getAlgorithm(data));
+                    storageTasks.setSettings(SettingsAlgorithmActivity.getSettings(data));
                     model.setStorageTask(currentTab, storageTasks);
                     break;
                 case REQUEST_CODE_SENSORS:

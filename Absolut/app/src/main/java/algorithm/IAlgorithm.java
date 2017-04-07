@@ -13,4 +13,5 @@ public interface IAlgorithm extends Serializable {
     void setSettings(final Settings settings);
     Settings getSettings();
     List<Dot> getTestDots();
+    String getName();
 }
