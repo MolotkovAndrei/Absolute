@@ -1,6 +1,7 @@
 package draw;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -23,6 +24,7 @@ public abstract class DrawerSensor {
     protected List<Point> drawPoints;
     protected Rect drawPanel;
     protected Paint paint;
+    protected int colorSensor = Color.WHITE;
 
     public DrawerSensor(ITask task, Rect drawPanel) {
         paint = new Paint();
@@ -88,6 +90,8 @@ public abstract class DrawerSensor {
 
     public abstract void draw(Canvas canvas, int index);
 
+    protected abstract void setPaintOptionsForSensor();
+
     protected void convertPointsToPixelsPanel() {
         drawPoints.clear();
         int width = drawPanel.width();
@@ -108,9 +112,6 @@ public abstract class DrawerSensor {
             double coord = dots.get(i).y - minPointRange;
             valPix = convertCoordToPix(height, lengthIntervalY, coord);
             point.y = drawPanel.bottom - valPix;
-            if (valPix < 0) {
-                System.out.printf("sdnvkjsdnvkjsdnjvnsjdv");
-            }
             drawPoints.add(point);
         }
     }
@@ -121,5 +122,12 @@ public abstract class DrawerSensor {
 
     protected int convertCoordToPix(final int numberPixels, final double lengthRange, final double coord) {
         return (int)(coord * numberPixels / lengthRange);
+    }
+
+    protected void drawBorderDrawPanel(Canvas canvas) {
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(4);
+        canvas.drawRect(drawPanel, paint);
     }
 }

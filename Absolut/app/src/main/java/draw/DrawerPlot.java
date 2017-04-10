@@ -13,13 +13,16 @@ import storage.Dot;
 import task.ITask;
 
 public class DrawerPlot extends DrawerSensor {
+    protected final int COLOR_BACKGROUND_PLOT = Color.BLUE;
 
     public DrawerPlot(ITask task, Rect drawPanel) {
         super(task, drawPanel);
+        colorSensor = Color.WHITE;
     }
 
     public DrawerPlot(IFunction function, Rect drawPanel) {
         super(function, drawPanel);
+        colorSensor = Color.WHITE;
     }
 
     @Override
@@ -29,13 +32,9 @@ public class DrawerPlot extends DrawerSensor {
 
     @Override
     public void draw(Canvas canvas, int index) {
-        paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(drawPanel, paint);
+        drawBackgroundPlot(canvas);
 
-        paint.setColor(Color.WHITE);
-        paint.setAntiAlias(true);
-        paint.setStrokeWidth(4);
+        setPaintOptionsForSensor();
         Point leftPoint = drawPoints.get(0);
         Point rightPoint;
         for (int i = 1; i < drawPoints.size(); i++) {
@@ -46,9 +45,19 @@ public class DrawerPlot extends DrawerSensor {
                     (float)rightPoint.y, paint);
             leftPoint = rightPoint;
         }
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
+        drawBorderDrawPanel(canvas);
+    }
+
+    @Override
+    protected void setPaintOptionsForSensor() {
+        paint.setColor(colorSensor);
+        paint.setAntiAlias(true);
         paint.setStrokeWidth(4);
+    }
+
+    protected void drawBackgroundPlot(Canvas canvas) {
+        paint.setColor(COLOR_BACKGROUND_PLOT);
+        paint.setStyle(Paint.Style.FILL);
         canvas.drawRect(drawPanel, paint);
     }
 

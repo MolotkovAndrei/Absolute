@@ -15,10 +15,12 @@ import task.ITask;
 public class CalculatorDynamicsValues extends DrawerSensor {
     public CalculatorDynamicsValues(ITask task, Rect drawPanel) {
         super(task, drawPanel);
+        colorSensor = Color.argb(255, 255, 0, 255);
     }
 
     public CalculatorDynamicsValues(IFunction function, List<Dot> dots, Rect drawPanel) {
         super(function, dots, drawPanel);
+        colorSensor = Color.argb(255, 255, 0, 255);
     }
 
     @Override
@@ -29,26 +31,25 @@ public class CalculatorDynamicsValues extends DrawerSensor {
 
         int valuePixel;
         for (int i = 0; i < drawPoints.size(); i++) {
-            valuePixel = (int)(i * width / lengthIntervalX);
+            valuePixel = i * width / lengthIntervalX;
             drawPoints.get(i).x = drawPanel.right - valuePixel;
         }
     }
 
     @Override
     public void draw(Canvas canvas, int index) {
-        paint.setColor(Color.argb(255, 255, 0, 255));
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-
+        setPaintOptionsForSensor();
         for (int i = 1; i <= index; i++) {
             canvas.drawLine(drawPoints.get(i - 1).x, drawPoints.get(i - 1).y,
                     drawPoints.get(i).x, drawPoints.get(i).y, paint);
         }
+        drawBorderDrawPanel(canvas);
+    }
 
-        paint.setColor(Color.BLACK);
+    @Override
+    protected void setPaintOptionsForSensor() {
+        paint.setColor(colorSensor);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(4);
-
-        canvas.drawRect(drawPanel, paint);
+        paint.setStrokeWidth(2);
     }
 }

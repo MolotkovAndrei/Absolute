@@ -29,6 +29,7 @@ public class StorageTasks {
     private ITask currentTask;
     private IAlgorithm currentAlgorithm;
     private DisplayOptions displayOptions;
+    private boolean isSerial = false;
 
     public StorageTasks(Context context, final ITask task) {
         taskList.add(task);
@@ -81,6 +82,9 @@ public class StorageTasks {
 
     public void addTask(final ITask task) {
         taskList.add(task);
+        if (taskList.size() > 1) {
+            isSerial = true;
+        }
         currentTask = task;
     }
 
@@ -93,9 +97,14 @@ public class StorageTasks {
     }
 
     public void executeTasks() {
+        if (!isSerial) {
+            taskList.clear();
+            taskList.add(currentTask);
+        }
         for (ITask task : taskList) {
             task.run();
         }
+        isSerial = false;
     }
 
     public String getName() {

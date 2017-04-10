@@ -15,10 +15,12 @@ import task.ITask;
 public class CalculatorDistributionValues extends DrawerSensor {
     public CalculatorDistributionValues(ITask task, Rect drawPanel) {
         super(task, drawPanel);
+        colorSensor = Color.argb(255, 255, 0, 255);
     }
 
     public CalculatorDistributionValues(IFunction function, List<Dot> dots, Rect drawPanel) {
         super(function, dots, drawPanel);
+        colorSensor = Color.argb(255, 255, 0, 255);
     }
 
     @Override
@@ -29,26 +31,22 @@ public class CalculatorDistributionValues extends DrawerSensor {
     @Override
     public void draw(Canvas canvas, int index) {
         if (drawPoints.size() == 0) {
-            paint.setColor(Color.BLACK);
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(4);
-
-            canvas.drawRect(drawPanel, paint);
+            drawBorderDrawPanel(canvas);
             return;
         }
-        paint.setColor(Color.argb(255, 255, 0, 255));
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(1);
 
+        setPaintOptionsForSensor();
         for (int i = 0; i <= index; i++) {
             canvas.drawLine(drawPanel.left, drawPoints.get(i).y,
                     drawPanel.right, drawPoints.get(i).y, paint);
         }
+        drawBorderDrawPanel(canvas);
+    }
 
-        paint.setColor(Color.BLACK);
+    @Override
+    protected void setPaintOptionsForSensor() {
+        paint.setColor(colorSensor);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(4);
-
-        canvas.drawRect(drawPanel, paint);
+        paint.setStrokeWidth(1);
     }
 }

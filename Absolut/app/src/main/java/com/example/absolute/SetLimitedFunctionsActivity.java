@@ -260,7 +260,7 @@ public class SetLimitedFunctionsActivity extends AppCompatActivity {
                         drawerSensors.get(0).setContent(function);
                     }
                     if (typeLimitedTask == TypeLimitedTask.INDEX_TASK) {
-                        drawerSensors.get(limitedFunctions.size() + 1).setContent(function);
+                        drawerSensors.get(limitedFunctions.size() + 1).setContent(minimizeFunction);
                     } else {
                         penaltyFunction = new PenaltyFunction(minimizeFunction, limitedFunctions);
                         drawerSensors.get(limitedFunctions.size() + 1).setContent(penaltyFunction);

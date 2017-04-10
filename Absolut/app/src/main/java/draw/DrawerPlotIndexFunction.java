@@ -15,13 +15,9 @@ public class DrawerPlotIndexFunction extends DrawerPlotInvalidPoints {
 
     @Override
     public void draw(Canvas canvas, int index) {
-        paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(drawPanel, paint);
+       drawBackgroundPlot(canvas);
 
-        paint.setColor(Color.WHITE);
-        paint.setAntiAlias(true);
-        paint.setStrokeWidth(4);
+        setPaintOptionsForSensor();
         Point leftPoint = drawPoints.get(0);
         Point rightPoint;
         for (int i = 1; i < drawPoints.size(); i++) {
@@ -35,9 +31,6 @@ public class DrawerPlotIndexFunction extends DrawerPlotInvalidPoints {
 
         hiderInvalidPoints.draw(canvas);
 
-        paint.setColor(Color.BLACK);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(4);
-        canvas.drawRect(drawPanel, paint);
+        drawBorderDrawPanel(canvas);
     }
 }

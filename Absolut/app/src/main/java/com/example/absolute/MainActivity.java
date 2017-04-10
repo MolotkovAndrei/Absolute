@@ -260,13 +260,13 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
             case R.id.stopExecute:
                 model.stopDrawing();
                 invalidateOptionsMenu();
-                if (storageTasks.getTaskList().size() > 1) {
+                /*if (storageTasks.getTaskList().size() > 1) {
                     ITask task = storageTasks.getCurrentTask();
                     storageTasks.clearStorage();
                     storageTasks.addTask(task);
                     model.setStorageTask(currentTab, storageTasks);
                     model.setDrawingFinish(currentTab, true);
-                }
+                }*/
                 break;
             case R.id.itemNextStep:
                 model.continueDrawing(model.isCurrentWithStop(currentTab), currentTab);
@@ -457,8 +457,6 @@ public class MainActivity extends AppCompatActivity implements DialogListener, D
 
         creatorSeries.create(storageTasks, creatorFunctions);
     }
-
-
 
     private void createRandomFunction(StorageTasks storageTasks) {
         IFunction function = storageTasks.getMinimizedFunction();

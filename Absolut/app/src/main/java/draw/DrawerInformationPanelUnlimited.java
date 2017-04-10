@@ -11,6 +11,11 @@ public class DrawerInformationPanelUnlimited extends DrawerInformationPanel {
     }
 
     @Override
+    protected void setPaintOptionsForSensor() {
+
+    }
+
+    @Override
     protected void setFirstValuePoints() {
         if (dots.size() > 1) {
             currentPoint.x = dots.get(0).x;
